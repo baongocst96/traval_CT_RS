@@ -1,0 +1,147 @@
+--- 
+actions: 
+  - utter_greet
+  - utter_chung
+  - utter_vitri
+  - utter_thongtin
+  - utter_bye
+  - utter_no_vitri
+  - utter_no_thongtin
+  - action_traval_detail
+  - respond_faq
+  - action_find_hottel
+  - utter_agreehottel
+  - restart_form_hottel
+entities: 
+  - vi_tri
+  - thong_tin
+  - hoat_dong
+  - chi_phi
+  - CT
+  - lc_hottel
+  - qu_hottel
+  - time
+  - name_hottel
+  - num_room
+forms:
+  - hottel_form
+intents:
+  - greet
+  - request_chung
+  - request_vitri
+  - request_thongtin
+  - request_hoatdong
+  - request_chiphi
+  - goodbye
+  - request_hottel
+  - info_hottel
+  - form_hottel
+  - agreehottel
+  - request_editHottel
+slots: 
+  thong_tin: 
+    type: text
+  tt_thongtin: 
+    type: text
+  tt_vitri: 
+    type: text
+  vi_tri: 
+    type: text
+  lc_hottel:
+    type: text
+  qu_hottel:
+    type: text
+  time:
+    type: text
+  name_hottel:
+    type: text
+  sdt:
+    type: text
+  num_room:
+    type: text
+  note_hottel:
+    type: text  
+templates: 
+  utter_bye: 
+    - 
+      text: "Bye !"
+  utter_chung: 
+    - 
+      text: "Đến tới Cần Thơ thì bạn không thể bỏ qua các địa điểm như Bến Ninh Kiều, Chùa Ông, Chợ Đêm, nhà cổ Bình Thủy, Vườn cây Mỹ Khánh, Thiền Viện Trúc Lâm"
+            
+  utter_greet: 
+    - 
+      text: "Xin chào bạn !"
+  utter_no_thongtin: 
+    - 
+      text: "Bot không biết thông tin  !"
+  utter_no_vitri: 
+    - 
+      text: "Bot không biết vị trí !"
+  utter_thongtin: 
+    - 
+      text: |-
+          Thông tin {thong_tin}: 
+          {tt_thongtin}
+  utter_vitri: 
+    - 
+      text: |-
+          Vị Trí {vi_tri}: 
+          {tt_vitri}
+  utter_wrong_phone: 
+    - 
+      text: |-
+          Bớt giỡn đi người anh em !!!🥴 Hãy nhập sđt theo định dạng sau:
+           
+          Ex: 012345678
+  utter_wrong_time_hottel:
+    - 
+      text: |-
+          !!!🥴 Hãy nhập thời gian cụ thể:
+           
+          Ex: ngày mai, ngày kia, ngày 09/01,...
+  utter_wrong_num_room:
+    - 
+      text: |-
+          !!!🥴 Hãy nhập đúng số phòng bạn cần đặt:
+           
+          Ex: 1 phòng, 2 phòng, 3 phòng,...
+      button:
+        -
+          payload: "1 phòng"
+          title: "1 phòng"
+        -
+          payload: "2 phòng"
+          title: "2 phòng"
+        -
+          payload: "3 phòng"
+          title: "3 phòng" 
+  utter_ask_time:
+    -
+      text: "Bạn cần đặt khách sạn vào thời gian nào ? "
+  utter_ask_num_room:
+    -
+      text: "Bạn cần bao nhiêu phòng ?"
+      button:
+        -
+          payload: "1 phòng"
+          title: "1 phòng"
+        -
+          payload: "2 phòng"
+          title: "2 phòng"
+        -
+          payload: "3 phòng"
+          title: "3 phòng"      
+  utter_ask_sdt:
+    -
+      text: "Bạn vui lòng cung cấp số điện thoại để mình liên hệ nhé ☺️☺️"
+  utter_ask_note_hottel:
+    - 
+      text: "Bạn có cần chú thích gì trong quá trình đặt phòng không ?"
+  utter_agreehottel:
+    -
+      text: |
+        Đang thiết lập...
+        
+        Tôi đã đặt phòng cho bạn, vui lòng giữ điện thoại để khách sạn liên hệ lại nhé
+  
