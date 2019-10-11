@@ -6265,3 +6265,78 @@ Traceback (most recent call last):
   File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
     raise NotFound("Requested URL {} not found".format(url))
 sanic.exceptions.NotFound: Requested URL /socket.io/ not found
+2019-10-10 15:09:09,816 [DEBUG]  Available web server routes: 
+/webhooks/rest                                     GET                            custom_webhook_CmdlineInput.health
+/webhooks/rest/webhook                             POST                           custom_webhook_CmdlineInput.receive
+2019-10-10 15:09:29,816 [ERROR]  Exception occurred while handling uri: 'http://localhost:5005/socket.io/?EIO=3&transport=polling&t=MsqjpZX'
+Traceback (most recent call last):
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/app.py", line 893, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 407, in get
+    return self._get(request.path, request.method, "")
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
+    raise NotFound("Requested URL {} not found".format(url))
+sanic.exceptions.NotFound: Requested URL /socket.io/ not found
+2019-10-10 15:12:18,440 [ERROR]  Exception occurred while handling uri: 'http://localhost:5005/socket.io/?EIO=3&transport=polling&t=Msqjqri'
+Traceback (most recent call last):
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/app.py", line 893, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 407, in get
+    return self._get(request.path, request.method, "")
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
+    raise NotFound("Requested URL {} not found".format(url))
+sanic.exceptions.NotFound: Requested URL /socket.io/ not found
+2019-10-10 15:12:18,460 [ERROR]  Exception occurred while handling uri: 'http://localhost:5005/socket.io/?EIO=3&transport=polling&t=MsqjwyU'
+Traceback (most recent call last):
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/app.py", line 893, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 407, in get
+    return self._get(request.path, request.method, "")
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
+    raise NotFound("Requested URL {} not found".format(url))
+sanic.exceptions.NotFound: Requested URL /socket.io/ not found
+2019-10-10 15:12:18,465 [ERROR]  Exception occurred while handling uri: 'http://localhost:5005/socket.io/?EIO=3&transport=polling&t=Msqk139'
+Traceback (most recent call last):
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/app.py", line 893, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 407, in get
+    return self._get(request.path, request.method, "")
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
+    raise NotFound("Requested URL {} not found".format(url))
+sanic.exceptions.NotFound: Requested URL /socket.io/ not found
+2019-10-10 15:12:18,473 [ERROR]  Exception occurred while handling uri: 'http://localhost:5005/socket.io/?EIO=3&transport=polling&t=Msqk79q'
+Traceback (most recent call last):
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/app.py", line 893, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 407, in get
+    return self._get(request.path, request.method, "")
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
+    raise NotFound("Requested URL {} not found".format(url))
+sanic.exceptions.NotFound: Requested URL /socket.io/ not found
+2019-10-10 15:12:18,479 [ERROR]  Exception occurred while handling uri: 'http://localhost:5005/socket.io/?EIO=3&transport=polling&t=MsqkDGU'
+Traceback (most recent call last):
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/app.py", line 893, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 407, in get
+    return self._get(request.path, request.method, "")
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
+    raise NotFound("Requested URL {} not found".format(url))
+sanic.exceptions.NotFound: Requested URL /socket.io/ not found
+2019-10-10 15:12:18,485 [ERROR]  Exception occurred while handling uri: 'http://localhost:5005/socket.io/?EIO=3&transport=polling&t=MsqkJN9'
+Traceback (most recent call last):
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/app.py", line 893, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 407, in get
+    return self._get(request.path, request.method, "")
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
+    raise NotFound("Requested URL {} not found".format(url))
+sanic.exceptions.NotFound: Requested URL /socket.io/ not found
+2019-10-10 15:12:18,492 [ERROR]  Exception occurred while handling uri: 'http://localhost:5005/socket.io/?EIO=3&transport=polling&t=MsqkPTq'
+Traceback (most recent call last):
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/app.py", line 893, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 407, in get
+    return self._get(request.path, request.method, "")
+  File "/home/baongocst/anaconda3/envs/python36/lib/python3.6/site-packages/sanic/router.py", line 469, in _get
+    raise NotFound("Requested URL {} not found".format(url))
+sanic.exceptions.NotFound: Requested URL /socket.io/ not found

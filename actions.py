@@ -4,7 +4,7 @@ from rasa_sdk import Tracker, Action
 from rasa_sdk.events import SlotSet
 from rasa_sdk.forms import FormAction
 from rasa_sdk.executor import CollectingDispatcher
-import json, datetime
+import json, datetime, yaml, re
 
 class ViTri(Action):
     def name(self) -> Text:
@@ -57,35 +57,35 @@ class ViTri(Action):
             "thong_tin": "Theo Wiki: Bến Ninh Kiều là một địa danh du lịch có từ lâu và hấp dẫn du khách bởi phong cảnh sông nước hữu tình và vị trí thuận lợi nhìn ra dòng sông Hậu. Từ lâu bến Ninh Kiều đã trở thành biểu tượng về nét đẹp thơ mộng bên bờ sông Hậu của cả Thành phố Cần Thơ, thu hút nhiều du khách đến tham quan và đi vào thơ ca.",
             "hoat_dong": "Ăn uống, chụp hình, đi dạo",
             "chi_phi": "không có vé vào cổng, đồ ăn giá cả hợp lý ",
-            "img":"file:///media/baongocst/Free/projectPY/Nam/images/locations_travel/ben_ninh_kieu.jpg",
+            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/ben_ninh_kieu.jpg",
             "vi_tri":"Nằm ở: 38 Hai Bà Trưng, ​​Tân An, Ninh Kiều, Cần Thơ \n Bạn có thể di chuyển bằng ô tô hoặc xe máy đén đó"
             },
         "chợ đêm":{
             "thong_tin": "Ở đây có bán rất nhiều món ngon, trong đó có những món đặc trưng của miền Tây mà tiêu biểu là những món chè",
             "hoat_dong": "Ăn uống, chụp hình, đi dạo, shopping",
             "chi_phi": "không có vé vào cổng, đồ ăn ngon, quần áo giá cả hợp lý",
-            "img":"file:///media/baongocst/Free/projectPY/Nam/images/locations_travel/cho_dem.png",
+            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/cho_dem.png",
             "vi_tri":"Nằm ở: Hai Bà Trưng, Tân An, Ninh Kiều, Cần Thơ, Việt Nam \n Bạn có thể di chuyển bằng ô tô hoặc xe máy đén đó" 
             },
         "nhà cổ bình thủy":{
             "thong_tin": "Bằng giá trị kiến trúc, lịch sử của mình, nhà cổ Bình Thủy đã được công nhận là “di tích nghệ thuật cấp quốc gia”, ngày càng thu hút nhiều khách đến thăm cũng như các đoàn làm phim về mượn bối cảnh cho những thước phim của mình.",
             "hoat_dong": "tham quan , chụp ảnh",
             "chi_phi": "không có vé vào cổng",
-            "img":"file:///media/baongocst/Free/projectPY/Nam/images/locations_travel/nha_co_binh_thuy.jpg",
+            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/nha_co_binh_thuy.jpg",
             "vi_tri":"Nằm ở: 144 Bùi Hữu Nghĩa, Bình Thuỷ, Bình Thủy, Cần Thơ, Việt Nam \n\ Bạn có thể di chuyển bằng ô tô hoặc xe máy đén đó"
             },
         "vườn cây mỹ khánh":{
             "thong_tin": "Đặt chân tới vườn trái cây này thì bạn sẽ được tham quan hơn 20 giống cây trồng khác nhau sẽ cho bạn một trải nghiệm đặc biệt.",
             "hoat_dong": "tham quan , chụp ảnh, hái trái cây tại vườn và các trò chơi dân gian hấp dẫn",
             "chi_phi": "vé vào cổng 20k/ng, hái trái cây ăn tại vườn, mang về tính theo giá của vườn",
-            "img":"file:///media/baongocst/Free/projectPY/Nam/images/locations_travel/my_khanh.jpeg",
+            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/my_khanh.jpeg",
             "vi_tri":"Nằm ở: Mỹ Khánh, Phong Điền, Cần Thơ, Việt Nam \n Bạn có thể di chuyển bằng ô tô hoặc xe máy đén đó"
             },
         "chợ nổi cái răng":{
             "thong_tin": "Theo Wiki: Chợ nổi Cái Răng là chợ nổi chuyên trao đổi, mua bán nông sản, các loại trái cây, hàng hóa, thực phẩm, ăn uống ở trên sông và là điểm tham quan đặc sắc của quận Cái Răng, thành phố Cần Thơ",
             "hoat_dong": "tham quan , chụp ảnh, đi thuyền tham quan chợ nổi",
             "chi_phi": "vé tham quan bằng thuyên 200k/ng",
-            "img":"file:///media/baongocst/Free/projectPY/Nam/images/locations_travel/cho_noi_cai_rang.jpg",
+            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/cho_noi_cai_rang.jpg",
             "vi_tri":"Nằm ở: 46 Hai Bà Trưng, Lê Bình, Cái Răng, Cần Thơ \n Bạn có thể di chuyển bằng ô tô hoặc xe máy đến bến tàu dau đó thuê thuyền để tham quan trợ nổi"
             }
 
@@ -141,7 +141,7 @@ class find_hottel(Action):
             "name_hottel":"khach san TTC",
             "lc_hottel":"quận ninh kiều",
             "qu_hottel":"khách sạn chất lượng",
-            "img_hottel":"file:///media/baongocst/Free/projectPY/Nam/images/hottel/ttc_hottel.jpg",
+            "img_hottel":"file:///media/baongocst/Free/Git_rasa/images/hottel/ttc_hottel.jpg",
             "adress_Hottel":"312/2 Bến Ninh kiều thành phố cần thơ",
             "detail": "khách sạn sạch sẻ thoáng mát đêm 500k",
             "price":"500"
@@ -151,7 +151,7 @@ class find_hottel(Action):
             "name_hottel":"khach san Tây Nam",
             "lc_hottel":"quận cái răng",
             "qu_hottel":"khách sạn chất lượng",
-            "img_hottel":"file:///media/baongocst/Free/projectPY/Nam/images/hottel/taynam_hottel.jpg",
+            "img_hottel":"file:///media/baongocst/Free/Git_rasa/images/hottel/taynam_hottel.jpg",
             "adress_Hottel":"312/2 câù quang trung thành phố cần thơ",
             "detail": "khách sạn sạch sẻ thoáng mát đêm 300k",
             "price":"300"
@@ -171,9 +171,9 @@ class find_hottel(Action):
             if any(tracker.get_latest_entity_values("lc_hottel")):
                 lc_hottel = next(tracker.get_latest_entity_values("lc_hottel"), None)  ## value entity 
             else:
-                intro = "Dưới đây là một vài gợi ý phù hợp cho bạn:"                
+                intro = "Dưới đây là một vài gợi ý phù hợp cho bạn:"				
                 buttons = []
-                for keys, text in dict_listhottel.items():                    
+                for keys, text in dict_listhottel.items():					
                     buttons.append({
                         "title":keys,
                         "payload": "/info_hottel{}".format(self.forrmat_payload({"name_hottel": dict_listhottel[keys]['name_hottel']}))
@@ -230,13 +230,13 @@ class HottelForm(FormAction):
             "num_room":  [
             self.from_entity(entity="num_room"),
             self.from_text()
-            ],                      
+            ],					  
             "sdt": self.from_text(),
             "name_hottel":[
             self.from_entity(entity="name_hottel"),
             self.from_text()
             ],
-            "note_hottel": self.from_text()           
+            "note_hottel": self.from_text()		   
             
         }
 
@@ -329,7 +329,6 @@ class HottelForm(FormAction):
         "time":tracker.get_slot('time'),
         "note_hottel":tracker.get_slot('note_hottel')
         }
-        print(info)
         text_info = ''
         for key, text in info.items():
             text_info += str(key) + ' : ' + str(text) + '\n\n\n'
@@ -368,3 +367,554 @@ class Restart_hottel(Action):
             SlotSet("note_hottel", None)
         ]
         
+## restaurant
+
+class FindRestaurantToBook(Action):
+    def name(self) -> Text:
+        return "action_find_res_to_book"
+
+    @staticmethod
+    def db_name() -> Dict[Text, Any]:
+        return {
+            "ChIJeS6zcfuvCjERtN0GaPDQoBw": "Nhà hàng Ngọc Gia Trang",
+            "ChIJMyTxJeqvCjERoiAEm1aMnLA": "Nhà hàng Sông Tiền",
+            "ChIJx6-nJPavCjERfip2XNPNxoQ": "Nhà hàng hải sản Phố Biển",
+            "ChIJdT4xNPCvCjERii0h_4iJHzQ": "Quán ăn Lộc Phố",
+            "ChIJL0S5MamlCjERoxY9U1uAF9c": "Nhà hàng Mekong Taste",
+            "ChIJF-i2aXalCjERI2uZb6b-8kQ": "Nhà hàng Thới Sơn",
+            "ChIJYXKWUaq6CjERMMh5EG--xJk": "Nhà hàng Trung Lương",
+            "ChIJh36_ePuvCjERsrcMdlZzHGw": "Nhà hàng Làng Việt",
+            "ChIJ4-jigfKvCjERyEH2_BC_7u8": "Nhà hàng Chương Dương",
+            "ChIJp_0PMsOvCjERxoWVnQ1-Ils": "Quán ăn Tạ Hiền",
+            "ChIJb5rGx_CvCjERceuwJqes_Ls": "Nhà hàng Mỹ Phúc",
+            "ChIJu6cpKPqvCjER3FGV3WyOXhA": "Quán ăn Đồng Nam",
+            "ChIJ9QteN-qvCjERkf2Owo0MXG4": "Nhà hàng Quê Hương"
+        }
+    def forrmat_payload(self, enti):
+        return json.dumps(enti)
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+        ) -> List[Dict]:
+
+        # retrieve google api key		
+        with open("./ga_credentials.yml", 'r') as ymlfile:
+            cfg = yaml.safe_load(ymlfile)
+        key = cfg['credentials']['GOOGLE_KEY']
+
+        '''
+        # get user's current location		
+        get_origin = requests.post(
+            "https://www.googleapis.com/geolocation/v1/geolocate?key={}".format(key)).json()
+        
+        origin_lat = get_origin['location']['lat']
+        origin_lng = get_origin['location']['lng']
+        '''
+        # info = []
+
+        # for i in self.db_name().keys():
+        #	 place = requests.get('https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:{}&destinations=place_id:{}&language={}&key={}'
+        #					 .format("ChIJUx33J-uvCjERcVVUDPqhLak", i, "vi", key)).json()
+        #	 info.append({
+        #		 "name": self.db_name()[i],
+        #		 "distance_text": place['rows'][0]['elements'][0]['distance']['text'],
+        #		 "distance_value": place['rows'][0]['elements'][0]['distance']['value'],
+        #		 "duration": place['rows'][0]['elements'][0]['duration']['text']
+        #		 })
+
+        info = [
+            {
+                'name': 'Nhà hàng Sông Tiền', 
+                'distance_text': '4,5 km', 
+                'distance_value': 4511, 
+                'duration': '10 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng Quê Hương', 
+                'distance_text': '4,6 km', 
+                'distance_value': 4587, 
+                'duration': '10 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res1.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu1.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng Chương Dương', 
+                'distance_text': '4,7 km', 
+                'distance_value': 4690, 
+                'duration': '11 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res2.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu2.jpg'
+            }, 
+            {
+                'name': 'Quán ăn Tạ Hiền', 
+                'distance_text': '4,7 km', 
+                'distance_value': 4715, 
+                'duration': '9 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res3.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu3.jpg'
+            }, 
+            {
+                'name': 'Quán ăn Lộc Phố', 
+                'distance_text': '5,8 km', 
+                'distance_value': 5813, 
+                'duration': '14 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng Mỹ Phúc', 
+                'distance_text': '6,1 km', 
+                'distance_value': 6121, 
+                'duration': '14 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res1.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu1.jpg'
+            }, 
+            {
+                'name': 'Quán ăn Đồng Nam', 
+                'distance_text': '6,7 km', 
+                'distance_value': 6694, 
+                'duration': '15 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res2.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu2.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng hải sản Phố Biển', 
+                'distance_text': '7,0 km', 
+                'distance_value': 6972, 
+                'duration': '16 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res3.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu3.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng Làng Việt', 
+                'distance_text': '7,5 km', 
+                'distance_value': 7461, 
+                'duration': '15 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng Ngọc Gia Trang', 
+                'distance_text': '7,5 km', 
+                'distance_value': 7503, 
+                'duration': '15 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res1.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu1.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng Trung Lương', 
+                'distance_text': '9,9 km', 
+                'distance_value': 9922, 
+                'duration': '17 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res2.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu2.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng Thới Sơn', 
+                'distance_text': '12,2 km', 
+                'distance_value': 12156, 
+                'duration': '25 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res3.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu3.jpg'
+            }, 
+            {
+                'name': 'Nhà hàng Mekong Taste', 
+                'distance_text': '12,4 km', 
+                'distance_value': 12363, 
+                'duration': '27 phút',
+                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res.jpg',
+                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu.jpg'
+            }]
+
+        info.sort(key=lambda x: x['distance_value'])
+
+        msg  = "Dưới đây là thông tin nhà hàng gần nhất Bot có thể giúp bạn đặt bàn nè..."
+        dispatcher.utter_message(msg)
+
+        buttons = []
+        msg_title = "🔖 Tên: {}\n\
+                    \n🗾 Khoảng cách: {}\n\
+                    \n⌛ Thời gian đến nơi ước tính: {}".format(info[0]['name'], info[0]['distance_text'], info[0]['duration'])
+        enti = {"name_res":"{}".format(info[0]['name'].lower())}
+        print(enti)
+        enti_json = json.dumps(enti)
+        buttons.append({
+            "title": "👀 xem chi tiết",
+            "payload": "/detail_res{}".format(enti_json)
+            })
+        # buttons.append({
+        #	 "title": "🚸 Chỉ đường",
+        #	 "payload": "/direct_place_res{}".format(enti_json)
+        #	 })
+        buttons.append({
+            "title": "➕ More",
+            "payload": "/more_res"
+            })
+        dispatcher.utter_button_message(msg_title, buttons=buttons)
+        return [SlotSet("lst_res", info)]
+
+class MoreRestaurantBook(Action):
+    def name(self):
+        return "action_more_book"
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+        ) -> List[Dict]:
+
+        result = tracker.get_slot("lst_res")
+
+        msg = "Thêm 3 nhà hàng nữa cho bạn chọn nè...😍"
+        dispatcher.utter_message(msg)
+
+        msg_title = "Tôi có thể làm gì?"
+        buttons = []
+        for i in [1, 2, 3]:
+            msg_in = "🔖 Tên: {}\n\
+                    \n🗾 Khoảng cách: {}\n\
+                    \n⌛ Thời gian đến nơi ước tính: {}".format(result[i]['name'], result[i]['distance_text'], result[i]['duration'])
+            dispatcher.utter_message(msg_in)
+
+            enti = {"name_res":result[i]['name'].lower()}
+            enti_json = json.dumps(enti)
+            buttons.append({
+                "title":"{}".format(result[i]['name']),
+                "payload":"/detail_res{}".format(enti_json)
+                })
+
+        buttons.append({
+            "title":"🤔 Bạn có thể làm gì?",
+            "payload":"/what_can_help"
+            })
+
+        dispatcher.utter_button_message(msg_title, buttons=buttons)
+        return []
+class detailRestaurant(Action):
+    def name(self):
+        return "action_detail_res"
+        
+    def forrmat_payload(self, enti):
+        return json.dumps(enti)
+    
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+        ) -> List[Dict]:
+        nameres = tracker.get_slot('name_res')
+        result = tracker.get_slot("lst_res")
+        info = []
+        for i in result:
+            if(i['name'].lower() == nameres):
+                info = i
+                break
+        msg_in = "🔖 Tên: {}\n\
+                    \n🗾 Khoảng cách: {}\n\
+                    \n⌛ Thời gian đến nơi ước tính: {}".format(info['name'], info['distance_text'], info['duration'])
+        dispatcher.utter_media(info['image_res'], "image")
+        dispatcher.utter_media(info['menu_res'], "image")
+        buttons = []
+        buttons.append({
+            "title": "🏷 Đặt bàn",
+            "payload": "/book_restaurant{}".format(self.forrmat_payload({"name_res":info['name']}))
+            })
+        buttons.append({
+            "title":"Back",
+            "payload":"/more_res"
+        })
+        dispatcher.utter_button_message(msg_in, buttons=buttons)
+        
+    # Book form
+class RestaurantForm(FormAction):
+
+    def name(self) -> Text:
+        return "restaurant_form"
+
+    @staticmethod
+    def required_slots(tracker: Tracker) -> List[Text]:
+
+        return ["num_people_res", "add_request_res", "phone_res", "time_res"]
+
+    def slot_mappings(self) -> Dict[Text, Union[Dict, List[Dict]]]:
+
+        return {
+            "num_people_res": [
+                self.from_entity(entity="num_people_res"),
+                self.from_text(),
+            ],
+            "add_request_res": [
+                self.from_text()
+            ],
+            "phone_res": self.from_text(),
+            "time_res":[
+                self.from_text(),
+                self.from_entity(entity="time")
+            ]
+        }
+
+    @staticmethod
+    def is_int(string: Text) -> bool:
+
+        try:
+            int(string)
+            return True
+        except ValueError:
+            return False
+    def show_date(self,n):
+        day = datetime.datetime.today() + datetime.timedelta(days=1)
+        return day.strftime ('%d-%m-%Y')
+
+    def validate_num_people_res(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+        )-> Optional[Text]:
+
+        if self.is_int(value) and int(value) > 0:
+            return {"num_people_res": value}
+        else:
+            dispatcher.utter_template("utter_wrong_num_people_res", tracker)
+            return {"num_people_res": None}
+    
+    def validate_time_res(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Optional[Text]:
+        if any(tracker.get_latest_entity_values("time")):
+            switcher = {
+                'ngày_mai':self.show_date(1),
+                'ngày_kia':self.show_date(2),
+                'hôm_nay':self.show_date(0)
+            }
+            value = switcher.get(value, value)
+            return {"time_res": value}
+        else:
+            wrong_time = "!!!🥴 Hãy nhập thời gian cụ thể: \n\n\n Ex: ngày mai, ngày kia, ngày 09/01,..."
+            buttons = [
+                {
+                    "title":"Ngày mai",
+                    "payload":"ngày mai"
+                },
+                {
+                    "title":"Ngày kia",
+                    "payload":"ngày kia"
+                },
+                {
+                    "title":"Hôm nay",
+                    "payload":"hôm nay"
+                }
+
+            ]
+            dispatcher.utter_button_message(wrong_time, buttons=buttons)
+            return {"time_res": None}
+
+    def validate_phone_res(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Optional[Text]:
+        
+        import re
+
+        pattern = "^(0)[0-9]{9}"
+        z = re.match(pattern, value)
+    
+        if z and len(value) == 10:
+            return {"phone_res": value}
+        else:
+            dispatcher.utter_template("utter_wrong_phone", tracker)
+            return {"phone_res": None}
+            
+
+    def submit(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict]:
+
+        msg = "Đang thiết lập..."		
+        dispatcher.utter_message(msg)
+        dispatcher.utter_template("utter_confirm_res", tracker)
+        return []
+
+class ConfirmTransactionRestaurant(Action):
+    def name(self) -> Text:
+        return "action_confirm_restaurant"
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+        ) -> List[Dict]:
+        msg1 = "Đang thực hiện giao dịch..."
+        dispatcher.utter_message(msg1)
+        msg2 = "✔ Đã đặt chỗ thành công!\
+                \nTrong vòng 5p sẽ có nhân viên liên hệ với bạn."
+        dispatcher.utter_message(msg2)
+        return []
+
+    ##edit form hottel 
+
+class FormEditRestaurant(FormAction):
+    def name(self):
+        return "form_edit_res"
+
+    @staticmethod
+    def required_slots(tracker: Tracker) -> List[Text]:
+        if tracker.get_slot("edit_inform_res") == "số người":
+            return ["edit_num_people_res"]
+        elif tracker.get_slot("edit_inform_res") == "sdt":
+            return ["edit_phone_res"]
+        elif tracker.get_slot("edit_inform_res") == "time":
+            return ["edit_time_res"]
+        else:
+            return ["edit_add_request_res"]
+
+    def slot_mappings(self) -> Dict[Text, Union[Dict, List[Dict]]]:
+
+        return {
+            "edit_num_people_res": [
+                self.from_entity(entity="num_people_res"),
+                self.from_text(),
+            ],
+            "edit_phone_res": self.from_text(),
+            "edit_add_request_res": [
+                self.from_text(),
+            ],
+            "edit_time_res:":[
+                self.from_text(),
+                self.from_entity(entity="time")
+            ]
+        }
+
+    @staticmethod
+    def is_int(string: Text) -> bool:
+        """Check if a string is an integer"""
+    
+        try:
+            int(string)
+            return True
+        except ValueError:
+            return False
+    
+    def show_date(self,n):
+        day = datetime.datetime.today() + datetime.timedelta(days=1)
+        return day.strftime ('%d-%m-%Y')
+
+    def validate_edit_time_res(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Optional[Text]:
+        if any(tracker.get_latest_entity_values("time")):
+            switcher = {
+                'ngày_mai':self.show_date(1),
+                'ngày_kia':self.show_date(2),
+                'hôm_nay':self.show_date(0)
+            }
+            value = switcher.get(value, value)
+            return {"edit_time_res": value}
+        else:
+            wrong_time = "!!!🥴 Hãy nhập thời gian cụ thể: \n\n\n Ex: ngày mai, ngày kia, ngày 09/01,..."
+            dispatcher.utter_message(wrong_time)
+            return {"edit_time_res": None}
+
+    def validate_edit_num_people_res(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+        )-> Optional[Text]:
+
+        if self.is_int(value) and int(value) > 0:
+            return {"edit_num_people_res": value}
+        else:
+            dispatcher.utter_template("utter_wrong_num_people_res", tracker)
+            return {"edit_num_people_res": None}
+
+    def validate_edit_phone_res(
+        self,
+        value: Text,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Optional[Text]:
+
+        pattern = "^(0)[0-9]{9}"
+        z = re.match(pattern, value)
+    
+        if z and len(value) == 10:
+            return {"edit_phone_res": value}
+        else:
+            dispatcher.utter_template("utter_wrong_phone", tracker)
+            return {"edit_phone_res": None}
+
+    def submit(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict]:
+
+        msg = "Thay đổi của bạn đã đc lưu lại..."
+        dispatcher.utter_message(msg)
+
+        if tracker.get_slot("edit_inform_res") == "số người":
+            value = tracker.get_slot("edit_num_people_res")
+            return [SlotSet("num_people_res", value)]
+        elif tracker.get_slot("edit_inform_res") == "sdt":
+            value = tracker.get_slot("edit_phone_res")
+            return [SlotSet("phone_res", value)]
+        elif tracker.get_slot("edit_time_res") == "time":
+            value = tracker.get_slot("edit_time_res")
+            return [SlotSet("time_res", value)]
+        else:
+            value = tracker.get_slot("edit_add_request_res")
+            return [SlotSet("add_request_res", value)]
+
+class RestarFormEditRes(Action):
+    def name(self) -> Text:
+        return "restart_form_edit_res"
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+        ) -> List[Dict]:
+
+        return [SlotSet("edit_inform_res", None),
+                SlotSet("edit_num_people_res", None),
+                SlotSet("edit_inform_res", None),
+                SlotSet("edit_add_request_res", None)]
+
+class ActionRestart(Action):
+	def name(self)-> Text:
+		return "action_restart"
+
+	def run(self,
+	   dispatcher: CollectingDispatcher,
+	   tracker: Tracker,
+	   domain: Dict[Text, Any]
+	) -> List[Dict[Text, Any]]:
+		return[Restarted()]

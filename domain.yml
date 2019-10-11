@@ -1,5 +1,16 @@
 --- 
-actions: 
+actions:  
+  - utter_ask_time_res
+  - utter_wrong_num_people_res
+  - utter_ask_num_people_res
+  - utter_ask_phone_res
+  - utter_wrong_phone
+  - utter_confirm_res
+  - utter_after_direct_res
+  - utter_confirm_after_edit_res
+  - utter_edit_inform_res
+  - utter_ask_help
+  - utter_what_help
   - utter_greet
   - utter_chung
   - utter_vitri
@@ -12,6 +23,12 @@ actions:
   - action_find_hottel
   - utter_agreehottel
   - restart_form_hottel
+  - action_find_res_to_book
+  - action_more_book
+  - action_confirm_restaurant
+  - restart_form_edit_res
+  - action_detail_res
+  - action_restart 
 entities: 
   - vi_tri
   - thong_tin
@@ -23,9 +40,19 @@ entities:
   - time
   - name_hottel
   - num_room
-forms:
+  - name_res
+  - num_people_res
+forms: 
   - hottel_form
+  - restaurant_form
+  - form_edit_res
 intents:
+  - detail_res
+  - edit_res
+  - edit_form_res
+  - affirm_res
+  - direct_and_help
+  - what_can_help
   - greet
   - request_chung
   - request_vitri
@@ -38,37 +65,184 @@ intents:
   - form_hottel
   - agreehottel
   - request_editHottel
-slots: 
+  - request_book_restaurant
+  - more_res
+  - book_restaurant
+slots:
+  edit_time_res:
+    auto_fill: false
+    type: unfeaturized
+  phone_res:
+    auto_fill: false
+    type: unfeaturized
+  num_people_res:
+    auto_fill: false
+    type: unfeaturized 
+  add_request_res: 
+    auto_fill: false
+    type: unfeaturized
+  edit_add_request_res: 
+    auto_fill: false
+    type: unfeaturized
+  edit_inform_res: 
+    type: text
+  edit_num_people_res: 
+    auto_fill: false
+    type: unfeaturized
+  edit_phone_res: 
+    auto_fill: false
+    type: unfeaturized
+  lc_hottel: 
+    type: text
+  lst_res: 
+    type: list
+  name_hottel: 
+    type: text
+  name_res: 
+    type: text
+  note_hottel: 
+    type: text
+  num_room: 
+    type: text
+  qu_hottel: 
+    type: text
+  sdt: 
+    type: text
   thong_tin: 
     type: text
+  time: 
+    type: text
+  time_res: 
+    auto_fill: false
+    type: unfeaturized
   tt_thongtin: 
     type: text
   tt_vitri: 
     type: text
   vi_tri: 
     type: text
-  lc_hottel:
-    type: text
-  qu_hottel:
-    type: text
-  time:
-    type: text
-  name_hottel:
-    type: text
-  sdt:
-    type: text
-  num_room:
-    type: text
-  note_hottel:
-    type: text  
 templates: 
+  utter_after_direct_res: 
+    - 
+      buttons: 
+        - 
+          payload: /more_res
+          title: "➕ More"
+      text: 😀😀😀
+  utter_agreehottel: 
+    - 
+      text: |
+          Đang thiết lập...
+          
+          Tôi đã đặt phòng cho bạn, vui lòng giữ điện thoại để khách sạn liên hệ lại nhé
+  utter_ask_add_request_res: 
+    - 
+      text: "Bạn có yêu cầu gì thêm không nhỉ..."
+  utter_ask_help: 
+    - 
+      elements: 
+        buttons: 
+          title: "👇 Click me!"
+          url: "https://mytiengiang.vn/vi/login/"
+        title: "🔄 Phản hồi"
+      text: |-
+          Thông tin trợ giúp:
+           
+          ☎ Hotline: 0123456789
+           
+          🏠 Địa chỉ: ...
+  utter_ask_note_hottel: 
+    - 
+      text: "Bạn có cần chú thích gì trong quá trình đặt phòng không ?"
+  utter_ask_num_people_res: 
+    - 
+      text: "Bạn muốn đặt bàn cho mấy người vậy?"
+  utter_ask_num_room: 
+    - 
+      button: 
+        - 
+          payload: "1 phòng"
+          title: "1 phòng"
+        - 
+          payload: "2 phòng"
+          title: "2 phòng"
+        - 
+          payload: "3 phòng"
+          title: "3 phòng"
+      text: "Bạn cần bao nhiêu phòng ?"
+  utter_ask_phone_res: 
+    - 
+      text: "Cho Bot xin sđt của bạn để hoàn thành đặt bàn nhé!"
+  utter_ask_sdt: 
+    - 
+      text: "Bạn vui lòng cung cấp số điện thoại để mình liên hệ nhé ☺️☺️"
+  utter_ask_time: 
+    - 
+      text: "Bạn cần đặt khách sạn vào thời gian nào ? "
   utter_bye: 
     - 
       text: "Bye !"
   utter_chung: 
     - 
       text: "Đến tới Cần Thơ thì bạn không thể bỏ qua các địa điểm như Bến Ninh Kiều, Chùa Ông, Chợ Đêm, nhà cổ Bình Thủy, Vườn cây Mỹ Khánh, Thiền Viện Trúc Lâm"
-            
+  utter_confirm_after_edit_res: 
+    - 
+      buttons: 
+        - 
+          payload: /affirm_res
+          title: "👌 Oke"
+        - 
+          payload: /edit_form_res
+          title: "↺ Tôi muốn sửa thông tin"
+      text: |-
+          Thông tin sau khi thay đổi của bạn như sau:
+           
+          🔖 Tên: {name_res}
+           
+          👫 Số người: {num_people_res}
+
+          ⏰⏰thời gian: {time_res}
+           
+          ☎ SĐT đặt bàn: {phone_res}
+           
+          📖 Yêu cầu thêm: {add_request_res}
+  utter_confirm_res: 
+    - 
+      buttons: 
+        - 
+          payload: /affirm_res
+          title: "👌 Oke"
+        - 
+          payload: /edit_form_res
+          title: "↺ Tôi muốn sửa thông tin"
+      text: |-
+          Bot chuẩn bị đặt bàn cho bạn theo các thông số sau:
+           
+          🔖 Tên: {name_res}
+           
+          👫 Số người: {num_people_res}
+
+          ⏰⏰thời gian: {time_res}
+           
+          ☎ SĐT đặt bàn: {phone_res}
+           
+          📖 Yêu cầu thêm: {add_request_res}
+  utter_edit_inform_res: 
+    - 
+      buttons: 
+        - 
+          payload: "/edit_res{\"edit_inform_res\":\"số người\"}"
+          title: "👫 Số người"
+        - 
+          payload: "/edit_res{\"edit_inform_res\":\"sdt\"}"
+          title: "☎ Số điện thoại"
+        - 
+          payload: "/edit_res{\"edit_inform_res\":\"y/c\"}"
+          title: "📖 Yêu cầu"
+        - 
+          payload: "/edit_res{\"edit_inform_res\":\"time\"}"
+          title: "⏰ time"
+      text: "Bạn muốn sửa thông tin nào vậy?"
   utter_greet: 
     - 
       text: "Xin chào bạn !"
@@ -88,60 +262,78 @@ templates:
       text: |-
           Vị Trí {vi_tri}: 
           {tt_vitri}
+  utter_what_help: 
+    - 
+      buttons: 
+        - 
+          payload: /request_hottel
+          title: "🏨 Khách sạn"
+        - 
+          payload: /direct_and_help
+          title: "ℹ Thông tin trợ giúp"
+        - 
+          payload: /request_chung
+          title: "🗺 Địa điểm du lịch"
+        - 
+          payload: /action_find_res_to_book
+          title: "🏷 Đặt bàn nhà hàng"
+      text: "Tôi có thể giúp bạn rất nhiều việc đấy hihi 🤭!"
+  utter_wrong_num_people_res: 
+    - 
+      text: |-
+          Oop!!!🥴 Hãy nhập số người bằng số
+           
+          Ex: 1 người, 4 người, ...
+  utter_wrong_num_room: 
+    - 
+      button: 
+        - 
+          payload: "1 phòng"
+          title: "1 phòng"
+        - 
+          payload: "2 phòng"
+          title: "2 phòng"
+        - 
+          payload: "3 phòng"
+          title: "3 phòng"
+      text: |-
+          !!!🥴 Hãy nhập đúng số phòng bạn cần đặt:
+          
+          Ex: 1 phòng, 2 phòng, 3 phòng,...
   utter_wrong_phone: 
     - 
       text: |-
-          Bớt giỡn đi người anh em !!!🥴 Hãy nhập sđt theo định dạng sau:
+          Oop!!!🥴 Hãy nhập sđt theo định dạng sau:
            
-          Ex: 012345678
-  utter_wrong_time_hottel:
+          Ex: 0123456789
+  utter_wrong_time_hottel: 
     - 
       text: |-
           !!!🥴 Hãy nhập thời gian cụ thể:
-           
+          
           Ex: ngày mai, ngày kia, ngày 09/01,...
-  utter_wrong_num_room:
-    - 
-      text: |-
-          !!!🥴 Hãy nhập đúng số phòng bạn cần đặt:
-           
-          Ex: 1 phòng, 2 phòng, 3 phòng,...
-      button:
-        -
-          payload: "1 phòng"
-          title: "1 phòng"
-        -
-          payload: "2 phòng"
-          title: "2 phòng"
-        -
-          payload: "3 phòng"
-          title: "3 phòng" 
-  utter_ask_time:
+  utter_ask_time_res:
     -
-      text: "Bạn cần đặt khách sạn vào thời gian nào ? "
-  utter_ask_num_room:
-    -
-      text: "Bạn cần bao nhiêu phòng ?"
-      button:
-        -
-          payload: "1 phòng"
-          title: "1 phòng"
-        -
-          payload: "2 phòng"
-          title: "2 phòng"
-        -
-          payload: "3 phòng"
-          title: "3 phòng"      
-  utter_ask_sdt:
-    -
-      text: "Bạn vui lòng cung cấp số điện thoại để mình liên hệ nhé ☺️☺️"
-  utter_ask_note_hottel:
-    - 
-      text: "Bạn có cần chú thích gì trong quá trình đặt phòng không ?"
-  utter_agreehottel:
-    -
-      text: |
-        Đang thiết lập...
-        
-        Tôi đã đặt phòng cho bạn, vui lòng giữ điện thoại để khách sạn liên hệ lại nhé
-  
+      text: "Bạn cần đặt nhà hàng vào thời gian nào ?"
+  utter_ask_edit_num_people_res:
+  - 
+    text: "Bạn muốn thay đổi từ \"{num_people_res}\" người thành bao nhiêu người?"
+  utter_ask_edit_phone_res:
+  - 
+    text: "Bạn muốn thay đổi sdt \"{phone_res}\" thành?"
+  utter_ask_edit_add_request_res:
+  - 
+    text: "Bạn muốn thay đổi yêu cầu \"{add_request_res}\" thành?"
+  utter_ask_edit_time_res:
+  - 
+    text: "Bạn muốn thay đổi từ \"{time_res}\" thành thời gian nào vậy?"
+    buttons:
+      -
+        payload:"ngày mai"
+        title:"ngày kia"
+      -
+        payload:"hôm nay"
+        title:"hôm nay"
+      - 
+        pauload:"ngày kia"
+        title:"ngày kia"
