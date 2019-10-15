@@ -1,17 +1,16 @@
 # Configuration for Rasa NLU.
 # https://rasa.com/docs/rasa/nlu/components/
 language: vi
-pipeline:
+pipeline: 
   - name: "SpacyNLP"
-    model: "model-final_old"
+    model: "model_word2vec"
     case_sensitive: false
-  - name: "SpacyTokenizer"
-  - name: "SpacyFeaturizer"
-  - name: "EmbeddingIntentClassifier"
+  - name: "SpacyTokenizer"                    #custom usepyvi
+  - name: "CountVectorsFeaturizer"  
+  - name: "RegexFeaturizer"
   - name: "CRFEntityExtractor"
   - name: "EntitySynonymMapper"
-  - name: CountVectorsFeaturizer
-    token_pattern: (?u)\b\w+\b
+  - name: "EmbeddingIntentClassifier"
   # - name: "SpacyNLP"
   #   model: "vi_model_best"
   #   case_sensitive: false
@@ -26,7 +25,9 @@ pipeline:
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
 policies:
+  - name: FallbackPolicy
   - name: MemoizationPolicy
   - name: KerasPolicy
+    epochs: 300
   - name: MappingPolicy
-  - name: "FormPolicy"
+  - name: FormPolicy

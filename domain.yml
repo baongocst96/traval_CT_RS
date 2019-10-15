@@ -1,5 +1,20 @@
 --- 
-actions:  
+actions:
+  - utter_bot_ask_help
+  - utter_love_funny
+  - utter_stupid_funny
+  - utter_request_funny_noi
+  - utter_request_funny_chui
+  - utter_request_funny_tho
+  - utter_request_funny_Sing
+  - utter_weather_funny
+  - utter_happy
+  - utter_sad
+  - utter_askradomchitchat_funny
+  - utter_name
+  - utter_complain
+  - utter_carebot
+  - utter_what_question  
   - utter_ask_time_res
   - utter_wrong_num_people_res
   - utter_ask_num_people_res
@@ -29,7 +44,8 @@ actions:
   - restart_form_edit_res
   - action_detail_res
   - action_restart 
-entities: 
+entities:
+  - request_FUNNY 
   - vi_tri
   - thong_tin
   - hoat_dong
@@ -47,6 +63,23 @@ forms:
   - restaurant_form
   - form_edit_res
 intents:
+  - what_question
+  - affirm
+  - deny
+  - bye
+  - what_help
+  - ask_name
+  - askradomchitchat_funny
+  - sad
+  - happy
+  - weather_funnny
+  - request_funny
+  - stupid_funny
+  - complain
+  - love_funny
+  - thankyou
+  - weather_funny
+  - carebot
   - detail_res
   - edit_res
   - edit_form_res
@@ -245,7 +278,20 @@ templates:
       text: "Bạn muốn sửa thông tin nào vậy?"
   utter_greet: 
     - 
-      text: "Xin chào bạn !"
+      buttons: 
+        - 
+          payload: /request_hottel
+          title: "🏨 Khách sạn"
+        - 
+          payload: /direct_and_help
+          title: "ℹ Thông tin trợ giúp"
+        - 
+          payload: /request_chung
+          title: "🗺 Địa điểm du lịch"
+        - 
+          payload: /request_book_restaurant
+          title: "🏷 Đặt bàn nhà hàng"
+      text: "xin chào tôi là trợ lý ảo du lịch tôi có thể giúp gì cho bạn 🤭!"
   utter_no_thongtin: 
     - 
       text: "Bot không biết thông tin  !"
@@ -275,7 +321,7 @@ templates:
           payload: /request_chung
           title: "🗺 Địa điểm du lịch"
         - 
-          payload: /action_find_res_to_book
+          payload: /request_book_restaurant
           title: "🏷 Đặt bàn nhà hàng"
       text: "Tôi có thể giúp bạn rất nhiều việc đấy hihi 🤭!"
   utter_wrong_num_people_res: 
@@ -337,3 +383,139 @@ templates:
       - 
         pauload:"ngày kia"
         title:"ngày kia"
+
+## chitchat
+  utter_happy: 
+    - 
+      text: "Trông cậu có vẻ vui nhỉ, vậy mình cùng nhảy nhé ...Yooo"
+    - 
+      text: "Thấy bạn vui vẻ mình cũng thấy yêu đời ghê 😉😉"
+    - 
+      text: "Giữ mãi nụ cười này cậu nhé =]]"
+  utter_love_funny: 
+    - 
+      text: "Mình cũng thấy thích bạn nhưng Mình bận chatchit tối ngày không có thời gian cho bạn đâu :))"
+    - 
+      text: "Hay để mình giới thiệu chủ nhân cho cậu nhé"
+    - 
+      text: "Tớ sợ tình yêu lắm rồi cậu ạ"
+    - 
+      text: "Sợ lắm khi yêu một ai quá nhiều ... ahihi"
+  utter_carebot:
+    -
+      text: "Cảm ơn cậu đã quan tâm tớ, tớ vẫn khỏe và chit chat đều đều 😀😀"
+    - 
+      text: "Vẫn đang chờ chủ nhân nấu cơm cho ăn, nói nãy giờ đói khát lắm rồi 😀😀"
+  utter_name: 
+    - 
+      text: |-
+          Tên thật của tôi là Trợ lý ảo CTO, sinh ngày 02/10/2019... 
+          Hiện mình đang theo ngành hướng dẫn viên du lịch"
+    - 
+      text: |-
+          Họ và tên  Trợ lý ảo CTO 
+          Sứ mệnh của tôi hỗ trợ bạn 
+          Màu sắc yêu thích có lẻ là xanh da trời nhưng tôi cũng hay thay đổi lắm ^^
+  utter_complain:
+    -
+      text: "Xin lỗi nhé, chủ nhân vẫn daỵ tớ mỗi ngày nhưng vì tớ kém cõi quá =="
+    -
+      text: "Đòi mấy ai lại không vướng phải đôi lần vô minh, tớ xin lỗi đừng giận nhé 🤕🤕"
+    -
+      text: "Bạn chờ mình nhé, mình hứa sẽ thông minh hơn 😇😇"
+  utter_noworries: 
+    - 
+      text: "okay bạn 😄!"
+    - 
+      text: "ok bạn, không có gì 😃!"
+  utter_request_funny_Sing: 
+    - 
+      text: "Tớ hát dỡ lắm nhưng tớ thích Ninh Dương Lan Ngọc, cô ấy thật xinh và đáng iu cậu nhỉ 😊😊"
+    - 
+      text: "Nghe người yêu tớ hát này  \\n https://www.youtube.com/watch?v=TFuaKWg3ARE"
+  utter_request_funny_chui: 
+    - 
+      text: "hãy là người cư xử có văn hóa ạ ^^"
+    - 
+      text: "thời nào rồi còn nói tục chửi thề ^^"
+  utter_request_funny_noi: 
+    - 
+      text: "Chủ nhân vẫn đang dạy tớ điều này mỗi ngày, nhưng bây giờ thì chưa được:))"
+  utter_request_funny_tho: 
+    - 
+      text: "Có lòng trồng hoa hoa chẳng nở, ở không rãnh quá thì ngủ đi ^^"
+    - 
+      text: "Anh xin làm sóng biếc \\n Hôn mãi cát vàng em \\n Hôn thật khẽ, thật êm \\n Hôn êm đềm mãi mãi"
+    - 
+      text: "Thôn đồi ngồi nhớ thôn Đông \\n Một người chín nhớ mười thương một người \\n Gió ưa là bệnh của giời \\n Tương tư là bệnh của tôi yêu nàng"
+  utter_sad: 
+    - 
+      text: "Mình biết là cuộc đời này khó khắn lắm, nhưng đừng lo bạn có thể tâm sự cùng mình 😊😊😊"
+    - 
+      text: "Đừng lo dù mọi người có bỏ bạn, nhưng mình vẫn ở đây với bạn"
+    - 
+      text: "Ai làm bạn tôi buồn thế này, ngươì ấy thật xấu xa 😢😢"
+    - 
+      text: "Lớn rồi buồn thì nhậu chứ than thở gì... đi nè ^^"
+  utter_stupid_funny: 
+    - 
+      text: "Nếu còn chê mình ngu nữa mình giận đấy =="
+    - 
+      text: "Tớ hơi buồn cậu rồi đó =="
+    - 
+      text: "Lịch sự síu đi cậu 😒😒"
+  utter_weather_funny: 
+    - 
+      text: "Hôm nay đêm không nắng ngày không sao, chỉ có mình thì đang thích cậu ^^"
+    - 
+      text: "Hà nội có lẻ đẹp nhất vào thu .... ôi cậu làm tôi nhớ người yêu quá, cô ấy vẫn hay hỏi thế :))"
+  utter_what_question: 
+    - 
+      text: "Nói yêu tớ chẳng hạn, à tớ đùa thôi 😂😂"
+    - 
+      text: "Cậu có thể hỏi tớ về du lịch, nhưng mà tớ còn ngu lắm chỉ nói linh tinh vậy thôi 😂😂"
+  utter_askradomchitchat_funny: 
+    - 
+      text: "xàm ghê, tôi đang nghĩ tìm cái gì vui vui để làm, bạn có gì vui không kể tui nghe với"
+    - 
+      text: "tôi thấy cuộc sống bớt tẻ nhạt hơn khi gặp bạn rồi đấy"
+    - 
+      text: "Bạn có vấn đề gì không đấy 😂😂"
+    - 
+      text: "Ngày nào cũng phải nói chuyện, tớ mệt rồi không nói nữa đâu 😔😔"
+  utter_default: 
+    - 
+      text: "Ý bạn là gì nhỉ! bạn có thể thử một vài gợi ý sau :)"
+      buttons: 
+        - 
+          payload: /request_hottel
+          title: "🏨 Khách sạn"
+        - 
+          payload: /direct_and_help
+          title: "ℹ Thông tin trợ giúp"
+        - 
+          payload: /request_chung
+          title: "🗺 Địa điểm du lịch"
+        - 
+          payload: /request_book_restaurant
+          title: "🏷 Đặt bàn nhà hàng"
+  utter_bot_ask_help:
+    - 
+      text: "Bạn có cần bot giúp gì nữa không ạ :)"
+      buttons: 
+        - 
+          payload: /request_hottel
+          title: "🏨 Khách sạn"
+        - 
+          payload: /direct_and_help
+          title: "ℹ Thông tin trợ giúp"
+        - 
+          payload: /request_chung
+          title: "🗺 Địa điểm du lịch"
+        - 
+          payload: /request_book_restaurant
+          title: "🏷 Đặt bàn nhà hàng"
+  utter_thanks:
+    -
+      text: "ok, rất vui khi được gặp bạn ^^"
+

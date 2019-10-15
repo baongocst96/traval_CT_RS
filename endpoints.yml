@@ -41,3 +41,10 @@ action_endpoint:
 #  username: username
 #  password: password
 #  queue: queue
+tracker_store:
+  type: SQL
+  dialect: "mysql"  # the dialect used to interact with the db
+  url: "localhost"  # (optional) host of the sql db
+  db: "chatbot"  # path to your db
+  username: "root" # username used for authentication
+  password:  ""

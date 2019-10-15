@@ -57,35 +57,35 @@ class ViTri(Action):
             "thong_tin": "Theo Wiki: Bến Ninh Kiều là một địa danh du lịch có từ lâu và hấp dẫn du khách bởi phong cảnh sông nước hữu tình và vị trí thuận lợi nhìn ra dòng sông Hậu. Từ lâu bến Ninh Kiều đã trở thành biểu tượng về nét đẹp thơ mộng bên bờ sông Hậu của cả Thành phố Cần Thơ, thu hút nhiều du khách đến tham quan và đi vào thơ ca.",
             "hoat_dong": "Ăn uống, chụp hình, đi dạo",
             "chi_phi": "không có vé vào cổng, đồ ăn giá cả hợp lý ",
-            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/ben_ninh_kieu.jpg",
+            "img":"https://i.ibb.co/TWnF0nn/ben-ninh-kieu.jpg",
             "vi_tri":"Nằm ở: 38 Hai Bà Trưng, ​​Tân An, Ninh Kiều, Cần Thơ \n Bạn có thể di chuyển bằng ô tô hoặc xe máy đén đó"
             },
         "chợ đêm":{
             "thong_tin": "Ở đây có bán rất nhiều món ngon, trong đó có những món đặc trưng của miền Tây mà tiêu biểu là những món chè",
             "hoat_dong": "Ăn uống, chụp hình, đi dạo, shopping",
             "chi_phi": "không có vé vào cổng, đồ ăn ngon, quần áo giá cả hợp lý",
-            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/cho_dem.png",
+            "img":"https://i.ibb.co/kSntHQB/cho-dem.png",
             "vi_tri":"Nằm ở: Hai Bà Trưng, Tân An, Ninh Kiều, Cần Thơ, Việt Nam \n Bạn có thể di chuyển bằng ô tô hoặc xe máy đén đó" 
             },
         "nhà cổ bình thủy":{
             "thong_tin": "Bằng giá trị kiến trúc, lịch sử của mình, nhà cổ Bình Thủy đã được công nhận là “di tích nghệ thuật cấp quốc gia”, ngày càng thu hút nhiều khách đến thăm cũng như các đoàn làm phim về mượn bối cảnh cho những thước phim của mình.",
             "hoat_dong": "tham quan , chụp ảnh",
             "chi_phi": "không có vé vào cổng",
-            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/nha_co_binh_thuy.jpg",
+            "img":"https://i.ibb.co/2szXWhJ/nha-co-binh-thuy.jpg",
             "vi_tri":"Nằm ở: 144 Bùi Hữu Nghĩa, Bình Thuỷ, Bình Thủy, Cần Thơ, Việt Nam \n\ Bạn có thể di chuyển bằng ô tô hoặc xe máy đén đó"
             },
         "vườn cây mỹ khánh":{
             "thong_tin": "Đặt chân tới vườn trái cây này thì bạn sẽ được tham quan hơn 20 giống cây trồng khác nhau sẽ cho bạn một trải nghiệm đặc biệt.",
             "hoat_dong": "tham quan , chụp ảnh, hái trái cây tại vườn và các trò chơi dân gian hấp dẫn",
             "chi_phi": "vé vào cổng 20k/ng, hái trái cây ăn tại vườn, mang về tính theo giá của vườn",
-            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/my_khanh.jpeg",
+            "img":"https://i.ibb.co/gRV11df/my-khanh.jpg",
             "vi_tri":"Nằm ở: Mỹ Khánh, Phong Điền, Cần Thơ, Việt Nam \n Bạn có thể di chuyển bằng ô tô hoặc xe máy đén đó"
             },
         "chợ nổi cái răng":{
             "thong_tin": "Theo Wiki: Chợ nổi Cái Răng là chợ nổi chuyên trao đổi, mua bán nông sản, các loại trái cây, hàng hóa, thực phẩm, ăn uống ở trên sông và là điểm tham quan đặc sắc của quận Cái Răng, thành phố Cần Thơ",
             "hoat_dong": "tham quan , chụp ảnh, đi thuyền tham quan chợ nổi",
             "chi_phi": "vé tham quan bằng thuyên 200k/ng",
-            "img":"file:///media/baongocst/Free/Git_rasa/images/locations_travel/cho_noi_cai_rang.jpg",
+            "img":"https://i.ibb.co/Xsy46sH/cho-noi-cai-rang.jpg",
             "vi_tri":"Nằm ở: 46 Hai Bà Trưng, Lê Bình, Cái Răng, Cần Thơ \n Bạn có thể di chuyển bằng ô tô hoặc xe máy đến bến tàu dau đó thuê thuyền để tham quan trợ nổi"
             }
 
@@ -103,12 +103,13 @@ class ViTri(Action):
             intent_name = tracker.latest_message['intent'].get('name')
             slot_name = dict_intent[intent_name]
             thong_tin = next(tracker.get_latest_entity_values(slot_name), None)
+            print("Thong tin ", thong_tin)
             # thong_tin = tracker.get_slot(slot_name)
             thong_tin = thong_tin.replace('_',' ')
             ask = dict_thongtinct[thong_tin][slot_name]
             buttons = self.list_button(thong_tin)
             if(intent_name == 'request_thongtin'):  
-                dispatcher.utter_media(dict_thongtinct[thong_tin]['img'], "image")
+                dispatcher.utter_media(dict_thongtinct[thong_tin]['img'])
             dispatcher.utter_button_message(ask,buttons=buttons)
 
         
@@ -141,7 +142,7 @@ class find_hottel(Action):
             "name_hottel":"khach san TTC",
             "lc_hottel":"quận ninh kiều",
             "qu_hottel":"khách sạn chất lượng",
-            "img_hottel":"file:///media/baongocst/Free/Git_rasa/images/hottel/ttc_hottel.jpg",
+            "img_hottel":"https://i.ibb.co/4gLN0PC/ttc-hottel.jpg",
             "adress_Hottel":"312/2 Bến Ninh kiều thành phố cần thơ",
             "detail": "khách sạn sạch sẻ thoáng mát đêm 500k",
             "price":"500"
@@ -151,7 +152,7 @@ class find_hottel(Action):
             "name_hottel":"khach san Tây Nam",
             "lc_hottel":"quận cái răng",
             "qu_hottel":"khách sạn chất lượng",
-            "img_hottel":"file:///media/baongocst/Free/Git_rasa/images/hottel/taynam_hottel.jpg",
+            "img_hottel":"https://i.ibb.co/GnSXWT2/taynam-hottel.jpg",
             "adress_Hottel":"312/2 câù quang trung thành phố cần thơ",
             "detail": "khách sạn sạch sẻ thoáng mát đêm 300k",
             "price":"300"
@@ -185,7 +186,7 @@ class find_hottel(Action):
             for key, text in info.items():
                 if(key != 'img_hottel'):
                     detail += str(menu_show[key]) + ' : ' + text + '\n\n\n' 
-            dispatcher.utter_media(info['img_hottel'], "image")
+            dispatcher.utter_media(info['img_hottel'])
             bt_datphong = []
             bt_datphong.append({
                 "title":"Đặt phòng",
@@ -431,104 +432,104 @@ class FindRestaurantToBook(Action):
                 'distance_text': '4,5 km', 
                 'distance_value': 4511, 
                 'duration': '10 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu.jpg'
+                'image_res':'https://i.ibb.co/M84HxVj/res.jpg',
+                'menu_res':'https://i.ibb.co/k30xHBs/menu.jpg'
             }, 
             {
                 'name': 'Nhà hàng Quê Hương', 
                 'distance_text': '4,6 km', 
                 'distance_value': 4587, 
                 'duration': '10 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res1.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu1.jpg'
+                'image_res':'https://i.ibb.co/GcgT4ct/res1.jpg',
+                'menu_res':'https://i.ibb.co/gZc4H5q/menu2.jpg'
             }, 
             {
                 'name': 'Nhà hàng Chương Dương', 
                 'distance_text': '4,7 km', 
                 'distance_value': 4690, 
                 'duration': '11 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res2.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu2.jpg'
+                'image_res':'https://i.ibb.co/7zwrg3j/res2.jpg',
+                'menu_res':'https://i.ibb.co/xMDr6Wg/menu3.jpg'
             }, 
             {
                 'name': 'Quán ăn Tạ Hiền', 
                 'distance_text': '4,7 km', 
                 'distance_value': 4715, 
                 'duration': '9 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res3.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu3.jpg'
+                'image_res':'https://i.ibb.co/4wbDhwt/res3.jpg',
+                'menu_res':'https://i.ibb.co/VLY6v1x/menu2.jpg'
             }, 
             {
                 'name': 'Quán ăn Lộc Phố', 
                 'distance_text': '5,8 km', 
                 'distance_value': 5813, 
                 'duration': '14 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu.jpg'
+                'image_res':'https://i.ibb.co/M84HxVj/res.jpg',
+                'menu_res':'https://i.ibb.co/k30xHBs/menu.jpg'
             }, 
             {
                 'name': 'Nhà hàng Mỹ Phúc', 
                 'distance_text': '6,1 km', 
                 'distance_value': 6121, 
                 'duration': '14 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res1.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu1.jpg'
+                'image_res':'https://i.ibb.co/GcgT4ct/res1.jpg',
+                'menu_res':'https://i.ibb.co/VLY6v1x/menu2.jpg'
             }, 
             {
                 'name': 'Quán ăn Đồng Nam', 
                 'distance_text': '6,7 km', 
                 'distance_value': 6694, 
                 'duration': '15 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res2.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu2.jpg'
+                'image_res':'https://i.ibb.co/7zwrg3j/res2.jpg',
+                'menu_res':'https://i.ibb.co/gZc4H5q/menu2.jpg'
             }, 
             {
                 'name': 'Nhà hàng hải sản Phố Biển', 
                 'distance_text': '7,0 km', 
                 'distance_value': 6972, 
                 'duration': '16 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res3.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu3.jpg'
+                'image_res':'https://i.ibb.co/4wbDhwt/res3.jpg',
+                'menu_res':'https://i.ibb.co/xMDr6Wg/menu3.jpg'
             }, 
             {
                 'name': 'Nhà hàng Làng Việt', 
                 'distance_text': '7,5 km', 
                 'distance_value': 7461, 
                 'duration': '15 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu.jpg'
+                'image_res':'https://i.ibb.co/M84HxVj/res.jpg',
+                'menu_res':'https://i.ibb.co/k30xHBs/menu.jpg'
             }, 
             {
                 'name': 'Nhà hàng Ngọc Gia Trang', 
                 'distance_text': '7,5 km', 
                 'distance_value': 7503, 
                 'duration': '15 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res1.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu1.jpg'
+                'image_res':'https://i.ibb.co/GcgT4ct/res1.jpg',
+                'menu_res':'https://i.ibb.co/VLY6v1x/menu2.jpg'
             }, 
             {
                 'name': 'Nhà hàng Trung Lương', 
                 'distance_text': '9,9 km', 
                 'distance_value': 9922, 
                 'duration': '17 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res2.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu2.jpg'
+                'image_res':'https://i.ibb.co/7zwrg3j/res2.jpg',
+                'menu_res':'https://i.ibb.co/gZc4H5q/menu2.jpg'
             }, 
             {
                 'name': 'Nhà hàng Thới Sơn', 
                 'distance_text': '12,2 km', 
                 'distance_value': 12156, 
                 'duration': '25 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res3.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu3.jpg'
+                'image_res':'https://i.ibb.co/4wbDhwt/res3.jpg',
+                'menu_res':'https://i.ibb.co/xMDr6Wg/menu3.jpg'
             }, 
             {
                 'name': 'Nhà hàng Mekong Taste', 
                 'distance_text': '12,4 km', 
                 'distance_value': 12363, 
                 'duration': '27 phút',
-                'image_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/res.jpg',
-                'menu_res':'file:///media/baongocst/Free/Git_rasa/images/restaurant/menu.jpg'
+                'image_res':'https://i.ibb.co/M84HxVj/res.jpg',
+                'menu_res':'https://i.ibb.co/k30xHBs/menu.jpg'
             }]
 
         info.sort(key=lambda x: x['distance_value'])
@@ -619,8 +620,8 @@ class detailRestaurant(Action):
         msg_in = "🔖 Tên: {}\n\
                     \n🗾 Khoảng cách: {}\n\
                     \n⌛ Thời gian đến nơi ước tính: {}".format(info['name'], info['distance_text'], info['duration'])
-        dispatcher.utter_media(info['image_res'], "image")
-        dispatcher.utter_media(info['menu_res'], "image")
+        dispatcher.utter_media(info['image_res'])
+        dispatcher.utter_media(info['menu_res'])
         buttons = []
         buttons.append({
             "title": "🏷 Đặt bàn",
@@ -640,7 +641,8 @@ class RestaurantForm(FormAction):
 
     @staticmethod
     def required_slots(tracker: Tracker) -> List[Text]:
-
+        if any(tracker.get_slot("time")):
+            SlotSet("time_res", tracker.get_slot("time"))
         return ["num_people_res", "add_request_res", "phone_res", "time_res"]
 
     def slot_mappings(self) -> Dict[Text, Union[Dict, List[Dict]]]:
@@ -918,3 +920,28 @@ class ActionRestart(Action):
 	   domain: Dict[Text, Any]
 	) -> List[Dict[Text, Any]]:
 		return[Restarted()]
+
+class ActionTestDB(Action):
+    def name(self)-> Text:
+        return "action_test"
+
+    def run(self,
+       dispatcher: CollectingDispatcher,
+       tracker: Tracker,
+       domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:      
+    
+        mydb = mysql.connector.connect(
+           host="localhost",
+           user="root",
+           passwd="",
+           database="chatbot",
+           auth_plugin='mysql_native_password'
+         )
+        sqlht = 'select question from chatbot'
+        mycursor = mydb.cursor()
+        mycursor.execute(sqlht)
+        myresult = mycursor.fetchall()  
+        for x in myresult:
+            dispatcher.utter_message(x)
+        return[]
