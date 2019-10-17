@@ -5,6 +5,175 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.forms import FormAction
 from rasa_sdk.executor import CollectingDispatcher
 import json, datetime, yaml, re
+from rasa_sdk.events import SlotSet, Restarted, AllSlotsReset
+import sqlite3, logging
+from rasa_sdk.interfaces import ActionExecutionRejection
+from deepai_nlp.utils import remove_tone_line
+from rasa_sdk.events import ReminderScheduled, Form
+
+logger = logging.getLogger(__name__)
+REQUESTED_SLOT = "requested_slot"
+
+class DulichForm(FormAction):
+    def name(self):
+        # type: () -> Text
+        """Unique identifier of the form"""
+
+        pass
+    def chitchat(self, dispatcher, tracker):
+        dictmes = tracker.latest_message
+        intent = dictmes['intent']['name']
+        try:
+            dispatcher.utter_template("utter_"+intent, tracker)
+        except: 
+            print('intennnnn: ',intent)
+            pass
+    
+    def validate_slots(self, slot_dict, dispatcher, tracker, domain):
+        # type: (Dict[Text, Any], CollectingDispatcher, Tracker, Dict[Text, Any]) -> List[Dict]
+        """Validate slots using helper validation functions.
+
+        Call validate_{slot} function for each slot, value pair to be validated.
+        If this function is not implemented, set the slot to the value.
+        """
+
+        for slot, value in list(slot_dict.items()):
+            validate_func = getattr(
+                self, "validate_{}".format(slot), lambda *x: {slot: value}
+            )
+            # if tracker.latest_message.get('text').lower() == 'exit':
+            #     print("EXITTTTTTTTTTTT")
+            #     return[Restarted()]
+            validation_output = validate_func(value, dispatcher, tracker, domain)
+            print("showw wwwwwww", validation_output)
+            if not isinstance(validation_output, dict):
+                logger.warning(
+                    "Returning values in helper validation methods is deprecated. "
+                    + "Your `validate_{}()` method should return ".format(slot)
+                    + "a dict of {'slot_name': value} instead."
+                )
+                validation_output = {slot: validation_output}
+            slot_dict.update(validation_output)
+
+        # validation succeed, set slots to extracted values
+        return [SlotSet(slot, value) for slot, value in slot_dict.items()]
+    def validate(self, dispatcher, tracker, domain):
+        # type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -> List[Dict]
+        """Extract and validate value of requested slot.
+
+        If nothing was extracted reject execution of the form action.
+        Subclass this method to add custom validation and rejection logic
+        """
+
+        # extract other slots that were not requested
+        # but set by corresponding entity or trigger intent mapping
+        slot_values = self.extract_other_slots(dispatcher, tracker, domain)
+
+        # extract requested slot
+        slot_to_fill = tracker.get_slot(REQUESTED_SLOT)
+        if slot_to_fill:
+            slot_values.update(self.extract_requested_slot(dispatcher, tracker, domain))
+            print ("in ra cai gì nè", slot_values)
+            if not slot_values:
+                print(" alo alo ")
+                if tracker.latest_message.get('intent').get('name') == 'exit' \
+                        or remove_tone_line(tracker.latest_message.get('text').lower()) == 'yeu cau khac':
+                    raise ActionExecutionRejection(
+                        self.name(),
+                        "Failed to extract slot {0} "
+                        "with action {1}"
+                        "".format(slot_to_fill, self.name()),
+                    )
+                else:
+                    pass
+
+        logger.debug("Validating extracted slots: {}".format(slot_values))
+        return self.validate_slots(slot_values, dispatcher, tracker, domain)
+
+class VnptForm(FormAction):
+
+    def name(self):
+        # type: () -> Text
+        """Unique identifier of the form"""
+
+        pass
+
+    def validate(self, dispatcher, tracker, domain):
+        # type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -> List[Dict]
+        """Extract and validate value of requested slot.
+
+        If nothing was extracted reject execution of the form action.
+        Subclass this method to add custom validation and rejection logic
+        """
+
+        # extract other slots that were not requested
+        # but set by corresponding entity or trigger intent mapping
+        slot_values = self.extract_other_slots(dispatcher, tracker, domain)
+
+        # extract requested slot
+        slot_to_fill = tracker.get_slot(REQUESTED_SLOT)
+        if slot_to_fill:
+            slot_values.update(self.extract_requested_slot(dispatcher, tracker, domain))
+
+            if not slot_values:
+                if tracker.latest_message.get('intent').get('name') == 'exit' \
+                        or remove_tone_line(tracker.latest_message.get('text').lower()) == 'yeu cau khac':
+                    raise ActionExecutionRejection(
+                        self.name(),
+                        "Failed to extract slot {0} "
+                        "with action {1}"
+                        "".format(slot_to_fill, self.name()),
+                    )
+                else:
+                    pass
+
+        logger.debug("Validating extracted slots: {}".format(slot_values))
+        return self.validate_slots(slot_values, dispatcher, tracker, domain)
+
+    def run(self, dispatcher, tracker, domain):
+        # type: (CollectingDispatcher, Tracker, Dict[Text, Any]) -> List[Dict]
+        """Execute the side effects of this form.
+
+        Steps:
+        - activate if needed
+        - validate user input if needed
+        - set validated slots
+        - utter_ask_{slot} template with the next required slot
+        - submit the form if all required slots are set
+        - deactivate the form
+        """
+
+        # activate the form
+        events = self._activate_if_required(dispatcher, tracker, domain)
+        # validate user input
+        events.extend(self._validate_if_required(dispatcher, tracker, domain))
+        # schedule reminder
+        reminder = ReminderScheduled("action_restart", datetime.datetime.now())
+        events.append(reminder)
+        # check that the form wasn't deactivated in validation
+        if Form(None) not in events:
+
+            # create temp tracker with populated slots from `validate` method
+            temp_tracker = tracker.copy()
+            for e in events:
+                if e["event"] == "slot":
+                    temp_tracker.slots[e["name"]] = e["value"]
+
+            next_slot_events = self.request_next_slot(dispatcher, temp_tracker, domain)
+
+            if next_slot_events is not None:
+                # request next slot
+                events.extend(next_slot_events)
+            else:
+                # there is nothing more to request, so we can submit
+                self._log_form_slots(tracker)
+                logger.debug("Submitting the form '{}'".format(self.name()))
+                events.extend(self.submit(dispatcher, temp_tracker, domain))
+                # remove reminder
+                events.remove(reminder)
+                # deactivate the form after submission
+                events.extend(self.deactivate())
+        return events
 
 class ViTri(Action):
     def name(self) -> Text:
@@ -98,10 +267,24 @@ class ViTri(Action):
                     "title":keys,
                     "payload": "/request_thongtin{}".format(self.forrmat_payload("thong_tin", keys))
                     })
+            dictmes = tracker.latest_message
+            mes = dictmes['text']
+            conn = sqlite3.connect('/media/baongocst/Free/sqlite3/chatbot_dulich.db')
+            c = conn.cursor()
+            sql = "insert into chatbot(questions) values('%s')"%mes
+            print(sql)
+            c.execute(sql)
+            conn.commit()
+            conn.close()
             dispatcher.utter_button_message(intro, buttons=buttons)
         else:
             intent_name = tracker.latest_message['intent'].get('name')
-            slot_name = dict_intent[intent_name]
+            try:
+                slot_name = dict_intent[intent_name]
+            except:
+                print("error false intent")
+                return[]
+
             thong_tin = next(tracker.get_latest_entity_values(slot_name), None)
             print("Thong tin ", thong_tin)
             # thong_tin = tracker.get_slot(slot_name)
@@ -202,7 +385,7 @@ class find_hottel(Action):
 # form book hottel 
 # request numberroom, time, sdt
 # show kq
-class HottelForm(FormAction):
+class HottelForm(DulichForm):
     """Example of a custom form action"""
 
     def name(self) -> Text:
@@ -283,7 +466,10 @@ class HottelForm(FormAction):
     ) -> Optional[Text]:
         if any(tracker.get_latest_entity_values("num_room")):
             return {"num_room": value}
+        if self.is_int(value) and int(value) > 0:
+            return {"num_room": value}
         else:
+            self.chitchat(dispatcher, tracker)
             dispatcher.utter_template("utter_wrong_num_room", tracker)
             return {"num_room": None}
     
@@ -298,7 +484,7 @@ class HottelForm(FormAction):
         tracker: Tracker,
         domain: Dict[Text, Any],
     ) -> Optional[Text]:
-        if any(tracker.get_latest_entity_values("time")):
+        if any(tracker.get_latest_entity_values("time")) or any(tracker.get_slot("time")):
             switcher = {
                 'ngày_mai':self.show_date(1),
                 'ngày_kia':self.show_date(2),
@@ -641,9 +827,9 @@ class RestaurantForm(FormAction):
 
     @staticmethod
     def required_slots(tracker: Tracker) -> List[Text]:
-        if any(tracker.get_slot("time")):
-            SlotSet("time_res", tracker.get_slot("time"))
-        return ["num_people_res", "add_request_res", "phone_res", "time_res"]
+        # if any(tracker.get_slot("time")):
+        #     SlotSet("time", tracker.get_slot("time"))
+        return ["num_people_res", "add_request_res", "phone_res", "time"]
 
     def slot_mappings(self) -> Dict[Text, Union[Dict, List[Dict]]]:
 
@@ -656,7 +842,7 @@ class RestaurantForm(FormAction):
                 self.from_text()
             ],
             "phone_res": self.from_text(),
-            "time_res":[
+            "time":[
                 self.from_text(),
                 self.from_entity(entity="time")
             ]
@@ -688,7 +874,7 @@ class RestaurantForm(FormAction):
             dispatcher.utter_template("utter_wrong_num_people_res", tracker)
             return {"num_people_res": None}
     
-    def validate_time_res(
+    def validate_time(
         self,
         value: Text,
         dispatcher: CollectingDispatcher,
@@ -702,7 +888,7 @@ class RestaurantForm(FormAction):
                 'hôm_nay':self.show_date(0)
             }
             value = switcher.get(value, value)
-            return {"time_res": value}
+            return {"time": value}
         else:
             wrong_time = "!!!🥴 Hãy nhập thời gian cụ thể: \n\n\n Ex: ngày mai, ngày kia, ngày 09/01,..."
             buttons = [
@@ -721,7 +907,7 @@ class RestaurantForm(FormAction):
 
             ]
             dispatcher.utter_button_message(wrong_time, buttons=buttons)
-            return {"time_res": None}
+            return {"time": None}
 
     def validate_phone_res(
         self,
@@ -785,7 +971,7 @@ class FormEditRestaurant(FormAction):
         elif tracker.get_slot("edit_inform_res") == "sdt":
             return ["edit_phone_res"]
         elif tracker.get_slot("edit_inform_res") == "time":
-            return ["edit_time_res"]
+            return ["edit_time"]
         else:
             return ["edit_add_request_res"]
 
@@ -800,7 +986,7 @@ class FormEditRestaurant(FormAction):
             "edit_add_request_res": [
                 self.from_text(),
             ],
-            "edit_time_res:":[
+            "edit_time:":[
                 self.from_text(),
                 self.from_entity(entity="time")
             ]
@@ -820,7 +1006,7 @@ class FormEditRestaurant(FormAction):
         day = datetime.datetime.today() + datetime.timedelta(days=1)
         return day.strftime ('%d-%m-%Y')
 
-    def validate_edit_time_res(
+    def validate_edit_time(
         self,
         value: Text,
         dispatcher: CollectingDispatcher,
@@ -834,11 +1020,11 @@ class FormEditRestaurant(FormAction):
                 'hôm_nay':self.show_date(0)
             }
             value = switcher.get(value, value)
-            return {"edit_time_res": value}
+            return {"edit_time": value}
         else:
             wrong_time = "!!!🥴 Hãy nhập thời gian cụ thể: \n\n\n Ex: ngày mai, ngày kia, ngày 09/01,..."
             dispatcher.utter_message(wrong_time)
-            return {"edit_time_res": None}
+            return {"edit_time": None}
 
     def validate_edit_num_people_res(
         self,
@@ -887,9 +1073,9 @@ class FormEditRestaurant(FormAction):
         elif tracker.get_slot("edit_inform_res") == "sdt":
             value = tracker.get_slot("edit_phone_res")
             return [SlotSet("phone_res", value)]
-        elif tracker.get_slot("edit_time_res") == "time":
-            value = tracker.get_slot("edit_time_res")
-            return [SlotSet("time_res", value)]
+        elif tracker.get_slot("edit_time") == "time":
+            value = tracker.get_slot("edit_time")
+            return [SlotSet("time", value)]
         else:
             value = tracker.get_slot("edit_add_request_res")
             return [SlotSet("add_request_res", value)]
@@ -945,3 +1131,26 @@ class ActionTestDB(Action):
         for x in myresult:
             dispatcher.utter_message(x)
         return[]
+
+class ActioncolectDB(Action):
+    def name(self)-> Text:
+        return "action_collectdb"
+
+    def run(self,
+       dispatcher: CollectingDispatcher,
+       tracker: Tracker,
+       domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        dictmes = tracker.latest_message
+        mes = dictmes['text']
+        intent = dictmes['intent']['name']
+        conn = sqlite3.connect('/media/baongocst/Free/sqlite3/test_nlu.db')
+        c = conn.cursor()
+        sql = "insert into chatbot(questions, intent) values('%s','%s')"%(mes, intent)
+        c.execute(sql)
+        conn.commit()
+        c.close()
+        conn.close()
+        return[]
+
+

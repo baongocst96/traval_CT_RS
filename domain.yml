@@ -1,5 +1,7 @@
 --- 
 actions:
+  - utter_thanks
+  - utter_affirm
   - utter_bot_ask_help
   - utter_love_funny
   - utter_stupid_funny
@@ -43,7 +45,8 @@ actions:
   - action_confirm_restaurant
   - restart_form_edit_res
   - action_detail_res
-  - action_restart 
+  - action_restart
+  - action_collectdb 
 entities:
   - request_FUNNY 
   - vi_tri
@@ -192,6 +195,7 @@ templates:
       text: "Bạn muốn đặt bàn cho mấy người vậy?"
   utter_ask_num_room: 
     - 
+      text: "Bạn cần bao nhiêu phòng ?"
       button: 
         - 
           payload: "1 phòng"
@@ -201,8 +205,7 @@ templates:
           title: "2 phòng"
         - 
           payload: "3 phòng"
-          title: "3 phòng"
-      text: "Bạn cần bao nhiêu phòng ?"
+          title: "3 phòng"      
   utter_ask_phone_res: 
     - 
       text: "Cho Bot xin sđt của bạn để hoàn thành đặt bàn nhé!"
@@ -329,7 +332,7 @@ templates:
       text: |-
           Oop!!!🥴 Hãy nhập số người bằng số
            
-          Ex: 1 người, 4 người, ...
+          Ex: 1, 2, 4 , ...
   utter_wrong_num_room: 
     - 
       button: 
@@ -345,7 +348,7 @@ templates:
       text: |-
           !!!🥴 Hãy nhập đúng số phòng bạn cần đặt:
           
-          Ex: 1 phòng, 2 phòng, 3 phòng,...
+          Ex: 1, 2 , 3 ,...
   utter_wrong_phone: 
     - 
       text: |-
@@ -518,4 +521,7 @@ templates:
   utter_thanks:
     -
       text: "ok, rất vui khi được gặp bạn ^^"
+  utter_affirm:
+    -
+      text: "😉😉😉"
 
