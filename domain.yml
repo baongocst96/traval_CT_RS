@@ -1,5 +1,7 @@
 --- 
 actions:
+  - utter_feedback
+  - utter_thanksfb
   - utter_thanks
   - utter_affirm
   - utter_bot_ask_help
@@ -66,6 +68,7 @@ forms:
   - restaurant_form
   - form_edit_res
 intents:
+  - feedback
   - what_question
   - affirm
   - deny
@@ -502,6 +505,9 @@ templates:
         - 
           payload: /request_book_restaurant
           title: "🏷 Đặt bàn nhà hàng"
+        -
+          payload: /feedback
+          title: "😍😍 Góp ý để mình cải thiện hơn ^^"
   utter_bot_ask_help:
     - 
       text: "Bạn có cần bot giúp gì nữa không ạ :)"
@@ -524,4 +530,9 @@ templates:
   utter_affirm:
     -
       text: "😉😉😉"
-
+  utter_feedback:
+    -
+      text: "Mời bạn nhập phản hồi để nhóm mình phát triển hoàn thiện hơn nhé ^^"
+  utter_thanksfb:
+    -
+      text: "Cảm ơn ý kiến của bạn rất nhiều, chúng tôi sẽ ghi nhận và hoàn thiện hơn 🥰🥰"
