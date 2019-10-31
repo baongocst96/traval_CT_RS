@@ -11,7 +11,6 @@ from rasa_sdk.interfaces import ActionExecutionRejection
 from deepai_nlp.utils import remove_tone_line
 from rasa_sdk.events import ReminderScheduled, Form
 from  custom_form import DulichForm
-import ast
 
  
 logger = logging.getLogger(__name__)
@@ -31,7 +30,7 @@ def find_action_lastest(tracker):
 
 def value_in_arraydict(value, listbt):
     for i in listbt:
-        print("value in arraydict :", value, i['payload'] )
+        print("value in arraydict : %s, %s"%(value, i['title']) )
         if re.search(value, i['title']):
             return i['payload']
     return False
@@ -39,30 +38,6 @@ def value_in_arraydict(value, listbt):
 class TypeText(Action):
     def name(self) -> Text:
         return "typetext"
-
-    def create_useruter(self, tracker: Tracker):
-        intent = ''
-        entity = ''
-        if tracker.get_slot("list_button"):
-            listbt = tracker.get_slot("list_button")
-            print("in ra cai bien toan cuc",listbt)            
-            usertext = tracker.latest_message['text']
-            print("usertext : ", usertext)
-            bt = value_in_arraydict(usertext, listbt)
-            if bt:
-                intent = bt[1:bt.find('{')]
-                entity = bt[bt.find('{')+1:-1]
-                print('in ra bt %s, %s, %s'%(bt, intent, entity))
-                dictet = ast.literal_eval('{'+entity+'}')
-                print('in ra bt %s, %s, %s'%(bt, intent, dictet))
-                print("in ra cai bien toan cuc",tracker.get_slot("list_button"))            
-                print("phia truoc la action find_hottel")
-                return [UserUttered("baongocst", {
-                            "intent": {"confidence": 2.217, "name": intent.lower()}, 
-                            "entities": [{'start': 0, 'end': 13, 'value': list(dictet.values())[0].lower(), 'entity': list(dictet.keys())[0].lower(), 'confidence': 1, 'extractor': 'CRFEntityExtractor'}]
-                            }), SlotSet("list_button", None)]
-        return []
-
     def run(
         self, 
         dispatcher: CollectingDispatcher,
@@ -76,12 +51,25 @@ class TypeText(Action):
         
         # # actionlastest = find_action_lastest(tracker)
         # # if actionlastest == 'action_traval_detail':
-        print("------------------TEST TYPE BUTTON--------------")
-        uttermess = self.create_useruter(tracker)
-        if uttermess:
-            return uttermess
-        else:
-            print(" ############## retrutn ]]]")
+        # intent = ''
+        # entity = ''
+        # if tracker.get_slot("lc_hottel"):
+        #     listbt = tracker.get_slot("lc_hottel")            
+        #     usertext = tracker.latest_message['text']
+        #     print("usertext : ", usertext)
+        #     bt = value_in_arraydict(usertext, listbt)
+        #     if bt:
+        #         intent = bt[1:bt.find('{')]
+        #         entity = bt[bt.find('{')+1:-2]
+        #         print('in ra bt %s, %s, %s'%(bt, intent, entity))
+        #     print("in ra cai bien toan cuc",tracker.get_slot("lc_hottel"))            
+        #     print("phia truoc la action find_hottel")
+        #     return [UserUttered("baongocst", {
+        #                  "intent": {"confidence": 2.217, "name": "request_thongtin,"}, 
+        #                  "entities": [{'value':'bến ninh kiều', 'entity':'thong_tin'}]
+        #                 }), SlotSet("lc_hottel", None)]
+        # else:
+        #     print(" ############## retrutn ]]]")
             return []
 
 
@@ -124,7 +112,7 @@ class ViTri(Action):
         tracker: Tracker,
         domain: Dict[Text, Any],
         ) -> List[Dict]:
-        buttons =[]
+        
         dict_intent = {
         "request_vitri": "vi_tri",
         "request_thongtin": "thong_tin",
@@ -172,13 +160,29 @@ class ViTri(Action):
 
         
         #text process data 
-        typetext = TypeText()
-        userutter = typetext.create_useruter(tracker)
         print("------------------TEST TYPE BUTTON--------------")
-        if userutter:
-            return userutter
+        intent = ''
+        entity = ''
+        if tracker.get_slot("lc_hottel"):
+            listbt = tracker.get_slot("lc_hottel")            
+            usertext = tracker.latest_message['text']
+            print("usertext : ", usertext)
+            bt = value_in_arraydict(usertext, listbt)
+            if bt:
+                intent = bt[1:bt.find('{')]
+                entity = bt[bt.find('{')+1:-2]
+                print('in ra bt %s, %s, %s'%(bt, intent, entity))
+            print("in ra cai bien toan cuc",tracker.get_slot("lc_hottel"))            
+            print("phia truoc la action find_hottel")
+            return [UserUttered("baongocst", {
+                         "intent": {"confidence": 2.217, "name": "request_thongtin"}, 
+                         "entities": [{'start': 0, 'end': 13, 'value': 'chợ đêm', 'entity': 'thong_tin', 'confidence': 1, 'extractor': 'CRFEntityExtractor'}]
+                        }), SlotSet("lc_hottel", None)]
         else:
-            print(" ############## retrutn ]]]")      
+            print(" ############## retrutn ]]]")
+            
+
+
 
         if  tracker.latest_message['intent'].get('name') == 'request_chung':
             intro = "Đến tới Cần Thơ thì bạn không thể bỏ qua các địa điểm như Bến Ninh Kiều, Chùa Ông, Chợ Đêm, nhà cổ Bình Thủy, Vườn cây Mỹ Khánh, Thiền Viện Trúc Lâm"
@@ -220,7 +224,8 @@ class ViTri(Action):
                 dispatcher.utter_media(dict_thongtinct[thong_tin]['img'])
             dispatcher.utter_button_message(ask,buttons=buttons)
 
-        return [SlotSet("list_button",buttons)]
+        
+        return [SlotSet("lc_hottel",buttons)]
 
         ##if any(tracker.get_latest_entity_values("CT"))
 

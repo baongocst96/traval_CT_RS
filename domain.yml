@@ -48,7 +48,8 @@ actions:
   - restart_form_edit_res
   - action_detail_res
   - action_restart
-  - action_collectdb 
+  - action_collectdb
+  - typetext 
 entities:
   - request_FUNNY 
   - vi_tri
@@ -159,6 +160,8 @@ slots:
   tt_vitri: 
     type: text
   vi_tri: 
+    type: text
+  list_button: 
     type: text
 templates: 
   utter_after_direct_res: 
