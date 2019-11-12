@@ -49,7 +49,7 @@ actions:
   - action_detail_res
   - action_restart
   - action_collectdb
-  - typetext 
+  - typetext
 entities:
   - request_FUNNY 
   - vi_tri
@@ -199,9 +199,18 @@ templates:
   utter_ask_num_people_res: 
     - 
       text: "Bạn muốn đặt bàn cho mấy người vậy?"
+      button: 
+        - 
+          payload: "1 người"
+          title: "1 người"
+        - 
+          payload: "2 người"
+          title: "2 người"
+        - 
+          payload: "3 người"
+          title: "3 người"
   utter_ask_num_room: 
     - 
-      text: "Bạn cần bao nhiêu phòng ?"
       button: 
         - 
           payload: "1 phòng"
@@ -211,7 +220,9 @@ templates:
           title: "2 phòng"
         - 
           payload: "3 phòng"
-          title: "3 phòng"      
+          title: "3 phòng"
+      text: "Bạn cần bao nhiêu phòng ?"
+
   utter_ask_phone_res: 
     - 
       text: "Cho Bot xin sđt của bạn để hoàn thành đặt bàn nhé!"
@@ -539,3 +550,4 @@ templates:
   utter_thanksfb:
     -
       text: "Cảm ơn ý kiến của bạn rất nhiều, chúng tôi sẽ ghi nhận và hoàn thiện hơn 🥰🥰"
+

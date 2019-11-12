@@ -40,10 +40,14 @@ class TypeText(Action):
     def name(self) -> Text:
         return "typetext"
 
-    def create_useruter(self, tracker: Tracker):
+    def create_useruter(self, tracker: Tracker):        
         intent = ''
         entity = ''
         if tracker.get_slot("list_button"):
+            # return [UserUttered("baongocst", {
+            #                 "intent": {"confidence": 2.217, "name": 'request_thongtin'}, 
+            #                 "entities": [{'start': 0, 'end': 13, 'value': 'chợ đêm', 'entity': 'thong_tin', 'confidence': 1, 'extractor': 'CRFEntityExtractor'}]
+            #                 }), SlotSet("list_button", None)]
             listbt = tracker.get_slot("list_button")
             print("in ra cai bien toan cuc",listbt)            
             usertext = tracker.latest_message['text']
@@ -68,22 +72,59 @@ class TypeText(Action):
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any],
-        ) -> List[Dict]:
-        # return [UserUttered("baongocst", {
-        #                  "intent": {"confidence": 2.217, "name": "request_thongtin"}, 
-        #                  "entities": [{'start': 0, 'end': 13, 'value': 'chợ đêm', 'entity': 'thong_tin', 'confidence': 1, 'extractor': 'CRFEntityExtractor'}]
-        #                 })]
-        
+        ) -> List[Dict]: 
+    
         # # actionlastest = find_action_lastest(tracker)
         # # if actionlastest == 'action_traval_detail':
-        print("------------------TEST TYPE BUTTON--------------")
-        uttermess = self.create_useruter(tracker)
-        if uttermess:
-            return uttermess
-        else:
-            print(" ############## retrutn ]]]")
-            return []
+        intent = ''
+        entity = ''
+        if tracker.get_slot("list_button"):
+            return [UserUttered("baongocst", {
+                            "intent": {"confidence": 2.217, "name": 'request_thongtin'}, 
+                            "entities": [{'start': 0, 'end': 13, 'value': 'chợ đêm', 'entity': 'thong_tin', 'confidence': 1, 'extractor': 'CRFEntityExtractor'}]
+                            }), SlotSet("list_button", None)]
+            listbt = tracker.get_slot("list_button")
+            print("in ra cai bien toan cuc",listbt)            
+            usertext = tracker.latest_message['text']
+            print("usertext : ", usertext)
+            bt = value_in_arraydict(usertext, listbt)
+            if bt:
+                intent = bt[1:bt.find('{')]
+                entity = bt[bt.find('{')+1:-1]
+                print('in ra bt %s, %s, %s'%(bt, intent, entity))
+                dictet = ast.literal_eval('{'+entity+'}')
+                print('in ra bt %s, %s, %s'%(bt, intent, dictet))
+                print("in ra cai bien toan cuc",tracker.get_slot("list_button"))            
+                print("phia truoc la action find_hottel")
+                return [UserUttered("baongocst", {
+                            "intent": {"confidence": 2.217, "name": intent.lower()}, 
+                            "entities": [{'start': 0, 'end': 13, 'value': list(dictet.values())[0].lower(), 'entity': list(dictet.keys())[0].lower(), 'confidence': 1, 'extractor': 'CRFEntityExtractor'}]
+                            }), SlotSet("list_button", None)]
+        return []
+        
+        
 
+
+# class ActionDefaultFallback(Action):
+
+#    def name(self):
+#       return "action_default_fallback"
+
+#    def run(
+#         self,
+#         dispatcher: CollectingDispatcher,
+#         tracker: Tracker,
+#         domain: Dict[Text, Any]
+#         ) -> List[Dict]:
+#         typetext = TypeText()
+#         userutter = typetext.create_useruter(tracker)
+#         print("------------------TEST TYPE BUTTON--------------")
+#         if userutter:
+#             return userutter 
+#         dispatcher.utter_message("Sorry, I couldn't understand.")
+#         return []
+
+    
 
 class ViTri(Action):
     def name(self) -> Text:
@@ -113,7 +154,7 @@ class ViTri(Action):
             })
         buttons.append({
             "title":"🏞🏞 khám phá địa điểm khác",
-            "payload":"/request_hottel"
+            "payload":"/request_chung"
             })
 
         return buttons
@@ -174,7 +215,7 @@ class ViTri(Action):
         #text process data 
         typetext = TypeText()
         userutter = typetext.create_useruter(tracker)
-        print("------------------TEST TYPE BUTTON--------------")
+        print("------------------TEST TYPE BUTTON---------------")
         if userutter:
             return userutter
         else:
@@ -234,9 +275,9 @@ class find_hottel(Action):
         return "action_find_hottel"
 
     dict_listhottel = {
-        "khach san TTC":
+        "khach san ttc":
             {
-            "name_hottel":"khach san TTC",
+            "name_hottel":"khach san ttc",
             "lc_hottel":"quận ninh kiều",
             "qu_hottel":"khách sạn chất lượng",
             "img_hottel":"https://i.ibb.co/4gLN0PC/ttc-hottel.jpg",
@@ -244,9 +285,9 @@ class find_hottel(Action):
             "detail": "khách sạn sạch sẻ thoáng mát đêm 500k",
             "price":"500"
             },
-        "khach san Tây Nam":
+        "khach san tây nam":
             {
-            "name_hottel":"khach san Tây Nam",
+            "name_hottel":"khach san tây nam",
             "lc_hottel":"quận cái răng",
             "qu_hottel":"khách sạn chất lượng",
             "img_hottel":"https://i.ibb.co/GnSXWT2/taynam-hottel.jpg",
@@ -273,25 +314,18 @@ class find_hottel(Action):
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any],
-        ) -> List[Dict]:      
+        ) -> List[Dict]:
+        buttons = []      
         #test phan button
         print("in ra cai bien toan cuc",type(tracker.get_slot("lc_hottel")))
         print(tracker.get_latest_input_channel())
         print("phia truoc la action find_hottel", tracker.latest_message, type(tracker.latest_message))
         
-        return [UserUttered("baongocst", {
-                         "intent": {"confidence": 2.217, "name": "request_thongtin"}, 
-                         "entities": [{'start': 0, 'end': 13, 'value': 'bến ninh kiều', 'entity': 'thong_tin', 'confidence': 1, 'extractor': 'CRFEntityExtractor'}]
-                        })]
-        try:
-            actionlastest = find_action_lastest(tracker)
-            print('*****************', actionlastest)
-            if actionlastest == 'action_find_hottel':
-                print("phia truoc la action find_hottel", actionlastest)
-                return [UserUttered("không hiểu gì luôn ẹc ")]
-        except:
-            print("erro except UserUttered")
-            pass            
+        typetext = TypeText()
+        userutter = typetext.create_useruter(tracker)
+        print("------------------TEST TYPE BUTTON--------------")
+        if userutter:
+            return userutter            
         if  tracker.latest_message['intent'].get('name') == 'request_hottel':
             if any(tracker.get_latest_entity_values("lc_hottel")):
                 lc_hottel = next(tracker.get_latest_entity_values("lc_hottel"), None)  ## value entity 
@@ -300,7 +334,7 @@ class find_hottel(Action):
                 buttons = []
                 for keys, text in self.dict_listhottel.items():					
                     buttons.append({
-                        "title":keys,
+                        "title":text.get('name_hottel'),
                         "payload": "/info_hottel{}".format(self.forrmat_payload({"name_hottel": self.dict_listhottel[keys]['name_hottel']}))
                         })
                 dispatcher.utter_button_message(intro,buttons=buttons)  
@@ -320,13 +354,14 @@ class find_hottel(Action):
                 "title":"chọn khách sạn khác",
                 "payload":"/request_hottel"
                 })
-            for event in reversed(tracker.events):
-                print("current action name is", event.get('name'))
-            if tracker.latest_message.get('text').lower() == 'ccc':
-                print("da xet vao in tent")
-                return UserUttered("/greet",intent={'name': 'greet', 'confidence': 1.0})
-            BUTTON_HOTTEL = bt_datphong
+            # for event in reversed(tracker.events):
+            #     print("current action name is", event.get('name'))
+            # if tracker.latest_message.get('text').lower() == 'ccc':
+            #     print("da xet vao in tent")
+            #     return UserUttered("/greet",intent={'name': 'greet', 'confidence': 1.0})
+            # BUTTON_HOTTEL = bt_datphong
             dispatcher.utter_button_message(detail,buttons=bt_datphong)
+        return [SlotSet("list_button",buttons)]
 
 # form book hottel 
 # request numberroom, time, sdt
@@ -537,6 +572,11 @@ class FindRestaurantToBook(Action):
         tracker: Tracker,
         domain: Dict[Text, Any]
         ) -> List[Dict]:
+        typetext = TypeText()
+        userutter = typetext.create_useruter(tracker)
+        print("------------------TEST TYPE BUTTON--------------")
+        if userutter:
+            return userutter 
 
         # retrieve google api key		
         with open("./ga_credentials.yml", 'r') as ymlfile:
@@ -1058,30 +1098,30 @@ class ActionRestart(Action):
 	) -> List[Dict[Text, Any]]:
 		return[Restarted()]
 
-class ActionTestDB(Action):
-    def name(self)-> Text:
-        return "action_test"
+# class ActionTestDB(Action):
+#     def name(self)-> Text:
+#         return "action_test"
 
-    def run(self,
-       dispatcher: CollectingDispatcher,
-       tracker: Tracker,
-       domain: Dict[Text, Any]
-    ) -> List[Dict[Text, Any]]:      
+#     def run(self,
+#        dispatcher: CollectingDispatcher,
+#        tracker: Tracker,
+#        domain: Dict[Text, Any]
+#     ) -> List[Dict[Text, Any]]:      
     
-        mydb = mysql.connector.connect(
-           host="localhost",
-           user="root",
-           passwd="",
-           database="chatbot",
-           auth_plugin='mysql_native_password'
-         )
-        sqlht = 'select question from chatbot'
-        mycursor = mydb.cursor()
-        mycursor.execute(sqlht)
-        myresult = mycursor.fetchall()  
-        for x in myresult:
-            dispatcher.utter_message(x)
-        return[]
+#         mydb = mysql.connector.connect(
+#            host="localhost",
+#            user="root",
+#            passwd="",
+#            database="chatbot",
+#            auth_plugin='mysql_native_password'
+#          )
+#         sqlht = 'select question from chatbot'
+#         mycursor = mydb.cursor()
+#         mycursor.execute(sqlht)
+#         myresult = mycursor.fetchall()  
+#         for x in myresult:
+#             dispatcher.utter_message(x)
+#         return[]
 
 class ActioncolectDB(Action):
     def name(self)-> Text:
@@ -1103,5 +1143,3 @@ class ActioncolectDB(Action):
         c.close()
         conn.close()
         return[]
-
-
